@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Locator</title>
+    <title>Group Locator</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -75,7 +75,7 @@
         bottom: 0;
         overflow-y: scroll;
         background: white;
-        padding: 0.5em;
+        padding: 0 0.5em;
         box-sizing: border-box;
       }
 
@@ -93,7 +93,7 @@
       }
 
       #locations-panel-list > header {
-        padding: 1.4em 1.4em 0 1.4em;
+        padding: 0 1.4em 0 1.4em;
       }
 
       #locations-panel-list h1.search-title {
@@ -117,6 +117,11 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
+      }
+
+      .search-branding {
+        font-size: 2em;
+        margin-top: 1.2em;
       }
       #locations-panel-list .search-input {
         width: 100%;
@@ -283,7 +288,7 @@
 
       /* ------------- DETAILS PANEL ------------------------------- */
       #locations-panel-details {
-        padding: 0.5em 1.5em;
+        padding: 1.5em 1.5em;
         box-sizing: border-box;
         display: none;
       }
@@ -433,6 +438,15 @@
         font-weight: 500;
         padding: 0.3em 0.81em;
       }
+
+      .area {
+        margin-bottom: -1.1em;
+      }
+
+      .road {
+        margin-bottom: 0.4em;
+        margin-top: 0;
+      }
     </style>
     <script defer>
       "use strict";
@@ -513,12 +527,14 @@
           }
           if (panToMarker && locationIdx != null) {
             locator.map.panTo(locator.locations[locationIdx].coords);
+            locator.map.setZoom(18);
+            locator.map.setTilt(45);
           }
         };
 
         // Create a marker for each location.
-        const mark = "./ProjectExodusCircle.svg";
         const markers = locator.locations.map(function (location, index) {
+          const mark = "./ProjectExodusCircle.svg";
           const marker = new google.maps.Marker({
             position: location.coords,
             map: locator.map,
@@ -528,10 +544,18 @@
             scaledSize: new google.maps.Size(25, 25),
           });
           marker.addListener("click", function () {
-            selectResultItem(index, false, true);
+            selectResultItem(index, true, true);
           });
           return marker;
         });
+
+        function toggleBounce() {
+          if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+          } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
+        }
 
         // Fit map to marker bounds.
         locator.updateBounds = function () {
@@ -959,13 +983,609 @@
           showElement(panelDetailsEl);
         };
       }
-
-      window.initMap();
     </script>
 
+    <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
     <!-- Config.js -->
 
-    <script src="config.js"></script>
+    <script defer>
+      "use strict";
+
+      const CONFIGURATION = {
+        locations: [
+          {
+            title: "3Ci & Shamar Consulting",
+            url: "./group-logos/3ci-logo.png",
+            address1: "56 Saal Street",
+            address2: "Zwavelpoort, Pretoria, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Monday",
+            email: "jan@3Ci.co.za",
+            coords: { lat: -25.81410386110579, lng: 28.351966297063264 },
+            placeId: "ChIJc-zBAUxclR4RdIRLRymZgww",
+          },
+
+          {
+            title: "Trinity Baptist Church",
+            url: "./group-logos/trinitybaptist-logo",
+            address1: "3 Boeing Road",
+            address2: "Ext 2/6 Buffalo Flats, East London South Africa",
+            startTime: "19h00",
+            endTime: "20h00",
+            day: "Monday",
+            email: "alrichsmith84@gmail.com",
+            coords: { lat: -33.0118853234336, lng: 27.838806596256152 },
+            placeId: "ChIJb3mnrd7hZh4RxM_IKATKumY",
+          },
+           
+          {
+            title: "Home Ground, Westville",
+            url: "./group-logos/homeground-logo.png",
+            address1: "Home Ground Church, 2 Church Place",
+            address2: "Westville, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Monday",
+            email: "office@homeground.org.za",
+            coords: { lat: -29.836547547923736, lng: 30.913942181841573 },
+            placeId: "ChIJiZdZ7zkA9x4R1Q4gzXUeX-w",
+          },
+
+          {
+            title: "ABC Recovery, Phoenix",
+            url: "./group-logos/abc-logo.png",
+            address1: "5 Fairlen Way, Lenham Unit 13",
+            address2: "Phoenix, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Monday",
+            email: "solomongopaul@gmail.com",
+            coords: { lat: -29.69618750546807, lng: 30.995287268345173 },
+            placeId: "ChIJ-TxQvKME9x4Rex5C9lr4Iac",
+          },
+
+          {
+            title: "ADCA, Ballito",
+            url: "./group-logos/adca-logo.png",
+            address1:
+              "Against Drugs & Child Abuse Main Street, Umhlali Village",
+            address2: "Ballito, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Monday",
+            email: "rex@adca.co.za",
+            coords: { lat: -29.47735206285197, lng: 31.217317981830114 },
+            placeId: "ChIJITux27YV9x4Rgi-v7AgUDaw",
+          },
+
+          {
+            title: "Grace Family Church, Riverside",
+            url: "./group-logos/grace-logo.png",
+            address1: "63 Anthony Road",
+            address2: "Umgeni Park, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Monday",
+            email: "nicholaseaves07@gmail.com",
+            coords: { lat: -29.80082754127942, lng: 31.021449068348584 },
+            placeId: "ChIJLdGlyBwH9x4RPmwwOerDPCc",
+          },
+
+          {
+            title: "Hilton Christian Fellowship",
+            url: "./group-logos/hcf-logo.png",
+            address1: "Hilton Christian Fellowship, Elizabeth Dr",
+            address2: "Hilton, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Monday",
+            email: "candy@hcf.org.za",
+            coords: { lat: -29.53702502354832, lng: 30.299389483684138 },
+            placeId: "ChIJ2aXMdHal9h4RSDYldKm-sp8",
+          },
+
+          {
+            title: "Life Changers",
+            url: "./group-logos/lifechangers-logo.png",
+            address1: "Life Changers Church, Corner Echium Rd & Raats Drive",
+            address2: "Tableview, Cape Town, South Africa",
+            startTime: "18h30",
+            endTime: "21h00",
+            day: "Monday",
+            email: "michael@lifechangers.org.za",
+            coords: { lat: -33.819893712387284, lng: 18.49381152430468 },
+            placeId: "ChIJvwSzkxRfzB0RRD0wQ8dNANA",
+          },
+
+          {
+            title: "Norwegian Settlers",
+            url: "./group-logos/norwegian-logo.png",
+            address1: "Lot no 17, Marburg Settlement, Izotsha Road",
+            address2: "Marburg, Port Shepstone, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Monday",
+            email: "nscrecoverykzn@gmail.com",
+            coords: { lat: -30.752276156400534, lng: 30.41413773954357 },
+            placeId:
+              "EjNJem90c2hhIFJkLCBHcm9zdmVub3IsIFBvcnQgU2hlcHN0b25lLCBTb3V0aCBBZnJpY2EiLiosChQKEgmhTJ6zGKRYHhF0ujrlNljNpBIUChIJQ9Gvy7amWB4RBmL7UbLDZM0",
+          },
+
+          {
+            title: "Elim Recovery",
+            url: "./group-logos/elim-logo.png",
+            address1: "300 Nutfield Road, Brookeborough",
+            address2: "County Fernanagh, Enniskillen, Northern Ireland",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Monday",
+            email: "elimrecovery@gmx.co.uk",
+            coords: { lat: 54.31351535618779, lng: -7.40851987329496 },
+            placeId: "ChIJa-uFHus7XkgRve3IAvLGlpc",
+          },
+
+          {
+            title: "Hebron Recovery",
+            url: "./group-logos/hebron-logo.png",
+            address1: "180 Moorcross Drive",
+            address2: "Chatsworth, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Monday",
+            email: "anthea@hebronrecovery.com",
+            coords: { lat: -29.899214774168364, lng: 30.863386268351643 },
+            placeId: "ChIJc9izEW1V9h4Re9TW8NkBwME",
+          },
+
+          {
+            title: "DCC, Mayville",
+            url: "./group-logos/dcc-logo.png",
+            address1: "37 Garth Road",
+            address2: "Mayville, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Monday",
+            email: "info@dcc-admin.co.za",
+            coords: { lat: -29.84330516657746, lng: 30.98180591252999 },
+            placeId: "ChIJhSEwp64A9x4RkkbCvizJsIU",
+          },
+
+          {
+            title: "Koinonia Recovery Centre",
+            url: "./group-logos/koinonia-logo.png",
+            address1: "4 Kennington Road",
+            address2: "Nahoon, East London, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Monday",
+            email: "info@koinoniarehab.co.za",
+            coords: { lat: -32.98491819115395, lng: 27.920611510783214 },
+            placeId: "ChIJ-WHlGCngZh4RYSYRJnG1SlY",
+          },
+
+          {
+            title: "Koinonia Recovery Centre",
+            url: "./group-logos/koinonia-logo.png",
+            address1: "2 Recreation Road",
+            address2: "Gonubie, East London, South Africa",
+            startTime: "16h30",
+            endTime: "18h30",
+            day: "Monday",
+            email: "info@koinoniarehab.co.za",
+            coords: { lat: -32.936677588482375, lng: 28.026031268453636 },
+            placeId: "ChIJdWSswbEYZx4RnSHxXFmaiF8",
+          },
+
+          {
+            title: "The Ark",
+            url: "./group-logos/ark-logo.png",
+            address1: "1 Sterkspruit Road",
+            address2: "Cliffdale, Hillcret, South Africa",
+            startTime: "18h00",
+            endTime: "20h00",
+            day: "Monday",
+            email: "admin@thearkkzn.co.za",
+            coords: { lat: -29.771455477794177, lng: 30.682237666495567 },
+            placeId: "ChIJazYmaTvw9h4RVx-8QZhcSx0",
+          },
+
+          {
+            title: "Urban Recovery, Midrand",
+            url: "./group-logos/urban-logo.png",
+            address1: "Urban Life Church, 64 Maud Avenue",
+            address2: "Crowthorn, Midrand, South Africa",
+            startTime: "19h00",
+            endTime: "21h00",
+            day: "Tuesday",
+            email: "steven@urbanrecovery.co.za",
+            coords: { lat: -25.971048485166985, lng: 28.079135097067713 },
+            placeId: "ChIJwx9Hqk1wlR4RISpvEuGubWQ",
+          },
+
+          {
+            // Address is unclear
+            title: "Recovery Unlimited, Hazeyview",
+            url: "./group-logos/unlimited-logo.png",
+            address1: "Novon Depot, Kiepersol Road",
+            address2: "Hazyview, South Africa",
+            startTime: "18h00",
+            endTime: "20h00",
+            day: "Tuesday",
+            email: "hazyview@churchunlimited.co.za",
+            coords: { lat: -25.065037319130585, lng: 31.047126028836008 },
+            placeId: "ChIJtf___6udwh4RgR5vkJyd6Hw",
+          },
+
+          {
+            title: "Cedar Hill Recovery",
+            url: "./group-logos/onelife-logo.png",
+            address1: "Cedar Hill Church",
+            address2: "27 Commercial Road, Amanzimtoti, South Africa",
+            startTime: "19h30",
+            endTime: "21h0",
+            day: "Tuesday",
+            email: ["gerhardus@cedarhill.email", "nathanwells@yahoo.co.uk"],
+            coords: { lat: -30.05805814606624, lng: 30.881009754873098},
+            placeId: "ChIJW-hwsnNN9h4Ra70fG9l5n4w",
+          },
+           
+          {
+            title: "One Life Recovery",
+            url: "./group-logos/onelife-logo.png",
+            address1: "69 Worlds View Road",
+            address2: "Worlds View, Pietermaritzburg, South Africa",
+            startTime: "18h15",
+            endTime: "21h15",
+            day: "Tuesday",
+            email: "recovery@onelifechurch.org.za",
+            coords: { lat: -29.57966794072239, lng: 30.32552489717744 },
+            placeId: "ChIJHRf_Jb-k9h4Rx6DCGjWHVIk",
+          },
+
+          {
+            title: "The Rock Church",
+            url: "./group-logos/rock-logo.png",
+            address1: "1 Tamarind Close",
+            address2: "Sunningdale, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Tuesday",
+            email: "therockrecovery1@gmail.com",
+            coords: { lat: -29.740715422837912, lng: 31.051023297182585 },
+            placeId: "ChIJ8x-WedwF9x4R1YqEx9urMMs",
+          },
+
+          {
+            title: "Grace Family Church, Ballito",
+            url: "./group-logos/grace-logo.png",
+            address1: "R102 Compensation",
+            address2: "Ballito, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Tuesday",
+            email: "gracerecoveryballito@gmail.com",
+            coords: { lat: -29.540153698262603, lng: 31.217266326012236 },
+            placeId:
+              "EkFDb21wZW5zYXRpb24gQmVhY2ggUmQsIEJhbGxpdG8sIERvbHBoaW4gQ29hc3QsIDQzOTksIFNvdXRoIEFmcmljYSIuKiwKFAoSCSneLCCAE_ceEfkdnK1F65hQEhQKEgkVg8LxfhT3HhHew1dBVULF8g",
+          },
+
+          {
+            title: "City Hill Recovery",
+            url: "./group-logos/cityhill-logo.png",
+            address1: "1 Greenmeadow Lane, Belverdere, Ext 1",
+            address2: "Hillcrest, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Tuesday",
+            email: "hello@cityhill.co.za",
+            coords: { lat: -29.760757379407043, lng: 30.78012448369122 },
+            placeId: "ChIJ-weaWRP79h4RYi13Qtb8Bco",
+          },
+
+          {
+            title: "Anthem Recovery",
+            url: "./group-logos/anthem-logo.png",
+            address1: "37 Mackeurtan Avenue",
+            address2: "Durban North, Durban, South Africa",
+            startTime: "18h45",
+            endTime: "20h15",
+            day: "Wednesday",
+            email: "chris@projectexodus.net",
+            coords: { lat: -29.776585011774657, lng: 31.045632110675818 },
+            placeId: "ChIJ8etkt0QG9x4RkeI61IHyJ1A",
+          },
+
+          {
+            title: "New Creation Recovery",
+            url: "./group-logos/new-creation-logo.png",
+            address1: "New Creation Church, 4 Gemsbok Road",
+            address2: "Robin Hills, Randburg, South Africa",
+            startTime: "19h00",
+            endTime: "21h00",
+            day: "Tuesday",
+            email: "recovery@newcreation.co.za",
+            coords: { lat: -26.11466361129178, lng: 27.979798541251927 },
+            placeId: "ChIJZ8q6nNB0lR4RTFXdMMjmfT8",
+          },
+
+          {
+            title: "Recovery Unlimited, White River",
+            url: "./group-logos/unlimited-logo.png",
+            address1: "Church Unlimited, Plot 50",
+            address2: "Touyz Rd, White River, South Africa",
+            startTime: "18h00",
+            endTime: "20h30",
+            day: "Wednesday",
+            email: "info@churchunlimited.co.za",
+            coords: { lat: -25.350734770006962, lng: 31.00400287615004 },
+            placeId: "ChIJa_djMEIx6B4RtIUWzqa8X_U",
+          },
+
+          {
+            title: "Recovery Unlimited, Nelspruit",
+            url: "./group-logos/unlimited-logo.png",
+            address1: "Recovery Unlimited, Nelspruit",
+            address2: "Mbombela, Nelspruit, South Africa",
+            startTime: "18h00",
+            endTime: "20h30",
+            day: "Wednesday",
+            email: "info@churchunlimited.co.za",
+            coords: { lat: -25.350734770006962, lng: 31.00400287615004 },
+            placeId: "ChIJa_djMEIx6B4RtIUWzqa8X_U",
+          },
+
+          {
+            title: "Hillsong Recovery, Century City",
+            url: "./group-logos/hillsong-logo.png",
+            address1: "Hillsong Church, Century City 1 Kinetic Avenue",
+            address2: "Cape Town, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Wednesday",
+            email: "recovery@hillsong.co.za",
+            coords: { lat: -33.89536933667945, lng: 18.506860701027335 },
+            placeId: "ChIJdfMhFxFczB0R6jMgOhmE41Q",
+          },
+
+          {
+            title: "Hillsong Recovery, Somerset West",
+            url: "./group-logos/hillsong-logo.png",
+            address1: "Somerset West Mall, Corner Century Drive & Main Road",
+            address2: "Cape Town, South Africa",
+            startTime: "18h30",
+            endTime: "21h00",
+            day: "Wednesday",
+            email: "lizzievissie@gmail.com",
+            coords: { lat: -34.082831262270346, lng: 18.82344931267403 },
+            placeId: "ChIJufJOo1u1zR0Ri60fxpWyizs",
+          },
+
+          {
+            title: "Urban Recovery, Centurion",
+            url: "./group-logos/urban-logo.png",
+            address1: "Hillsong Centurion Plum Court, 877 Freight Road",
+            address2: "Louwlardia, Centurion, South Africa",
+            startTime: "19h00",
+            endTime: "21h00",
+            day: "Wednesday",
+            email: "steven@urbanrecovery.co.za",
+            coords: { lat: -25.908680074733404, lng: 28.16021362590202 },
+            placeId: "ChIJ8aYnuy1klR4R-1WvWVn0F7s",
+          },
+
+          {
+            title: "ABC Recovery, Chatsworth",
+            url: "./group-logos/abc-logo.png",
+            address1: "Grace Worship Tabernacle, 31 Uranus Street",
+            address2: "Woodhurst, Chatsworth, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Wednesday",
+            email: "solomongopaul@gmail.com",
+            coords: { lat: -29.90520727742246, lng: 30.903605312531912 },
+            placeId: "ChIJ7adNOdGq9x4RT8_HJvUUYNY",
+          },
+
+          {
+            // Address unclear
+            title: "IGrow",
+            url: "./group-logos/igrow-logo.png",
+            address1: "Bloemendal St",
+            address2: "Lilyvale, Bloemfontein, South Africa",
+            startTime: "18h00",
+            endTime: "19h30",
+            day: "Wednesday",
+            email: "igrow.rg@gmail.com",
+            coords: { lat: -29.075877516299844, lng: 26.206926255820004 },
+            placeId:
+              "EkVCbG9lbWVuZGFsIFN0ICYgTGlseXZhbGUgU3QsIFJheXRvbiwgQmxvZW1mb250ZWluLCA5MzAxLCBTb3V0aCBBZnJpY2EiZiJkChQKEgm97kjK6tqPHhGqApht0f6zzhIUChIJve5Iyurajx4RqgKYbdH-s84aFAoSCclnIlrr2o8eEYlVvOqnCSs8GhQKEgnVuykk6tqPHhF66Z1VhxaHeSIKDTysq-4VTM6eDw",
+          },
+
+          {
+            title: "Koinonia Recovery Centre",
+            url: "./group-logos/koinonia-logo.png",
+            address1: "Near Umzimvubu St",
+            address2: "Nompumelelo, East London, South Africa",
+            startTime: "13h00",
+            endTime: "14h00",
+            day: "Wednesday",
+            email: "zandile@koinoniarehab.co.za",
+            coords: { lat: -32.954287138729164, lng: 27.924731584655998 },
+            placeId:
+              "EjpVbXppbXZ1YnUgU3QsIE5vbXB1bWVsZWxvLCBFYXN0IExvbmRvbiwgNTI0MSwgU291dGggQWZyaWNhIi4qLAoUChIJRVwt2wHgZh4Rp_dcExaKX10SFAoSCRvox4YB4GYeEfjDXHjh7HQ8",
+          },
+
+          {
+            title: "Grace Family Church, Umhlanga",
+            url: "./group-logos/grace-logo.png",
+            address1: "400 Umhlanga Rocks Drive",
+            address2: "Umhlanga, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Thursday",
+            email: "info@novacc.co.za",
+            coords: { lat: -29.726076791574616, lng: 31.080578083690213 },
+            placeId: "ChIJZcxvlVgP9x4RdYqUG6ikIps",
+          },
+
+          {
+            title: "Cornerstone Community Church",
+            url: "./group-logos/cornerstone-logo.png",
+            address1: "324 Longbury Drive",
+            address2: "Phoneix, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "21h00",
+            day: "Thursday",
+            email: "raheel@cast.org.za",
+            coords: { lat: -29.709265974215214, lng: 31.007217997181606 },
+            placeId: "ChIJAwsQr40E9x4R5R_CCrNGdhA",
+          },
+
+          {
+            title: "One Life Recovery, Eastwood",
+            url: "./group-logos/onelife-logo.png",
+            address1: "Eastwood Site Social Centre, 55 Kingfisher Road",
+            address2: "Eastwood, Pietermaritzburg, South Africa",
+            startTime: "18h00",
+            endTime: "20h00",
+            day: "Thursday",
+            email: "kemsleyb210@gmail.com",
+            coords: { lat: -29.583295626990704, lng: 30.422965968341593 },
+            placeId: "ChIJEdos6g-89h4RX-uVOYvDbQs",
+          },
+
+          {
+            title: "ABC Recovery, Caneside",
+            url: "./group-logos/abc-logo.png",
+            address1: "Brook Christian Fellowship, 22 Spireside",
+            address2: "Candeside, Phoenix, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Thursday",
+            email: "solomongopaul@gmail.com",
+            coords: { lat: -29.688786532423933, lng: 31.007464699033054 },
+            placeId: "ChIJF4SMs-wF9x4Rb6OZrpuV53Y",
+          },
+
+          {
+            title: "Hope Restoration Ministries",
+            url: "./group-logos/hope-logo.png",
+            address1: "1 Beynon Close, Zuurfontein 33-Ir",
+            address2: "Kempton Park, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Thursday",
+            email: "smatumba@hrm.org.za",
+            coords: { lat: -26.07946725401902, lng: 28.188342912414996 },
+            placeId: "ChIJjcmMnbRslR4RaYfqW7qZJoQ",
+          },
+
+          {
+            title: "Light House Recovery",
+            url: "./group-logos/lighthouse-logo.png",
+            address1: "41 Grey Avenue",
+            address2: "Table View, Cape Town, South Africa",
+            startTime: "18h30",
+            endTime: "20h30",
+            day: "Thursday",
+            email: "bwhitticom@gmail.com",
+            coords: { lat: -33.82934239482746, lng: 18.494697954992994 },
+            placeId: "ChIJu3CN3BlfzB0RaG-TlnbIUAw",
+          },
+
+          {
+            title: "Olive Tree Church",
+            url: "./group-logos/otc-logo.png",
+            address1: "113 Florida Road",
+            address2: "Windermere, Durban, South Africa",
+            startTime: "18h30",
+            endTime: "20h00",
+            day: "Friday",
+            email: "gareth@projectexodus.net",
+            coords: { lat: -29.83470447882349, lng: 31.017628554857687 },
+            placeId: "ChIJ04ZXc2QH9x4ReJtMETIA18Y",
+          },
+
+          {
+            title: "DCC, Phoenix",
+            url: "./group-logos/dcc-logo.png",
+            address1: "126 Abervale Road",
+            address2: "Rydalvale, Phoenix, Durban, South Africa",
+            startTime: "19h00",
+            endTime: "20h30",
+            day: "Friday",
+            email: "info@dcc-admin.co.za",
+            coords: { lat: -29.706758150337848, lng: 31.00124276834551 },
+            placeId: "ChIJ_Y2YWpAE9x4RPD1tj1QE-mg",
+          },
+
+          {
+            title: "Grace Bible Church",
+            url: "./group-logos/gracebible-logo.png",
+            address1: "1478 Dlebelendlovu Street, Zone 1",
+            address2: "Pimville, Soweto, South Africa",
+            startTime: "18h00",
+            endTime: "20h00",
+            day: "Friday",
+            email: "recovery@gracebiblechurch.org.za",
+            coords: { lat: -26.26198831263694, lng: 27.90774926824018 },
+            placeId: "ChIJAQPsg3GnlR4RPCCpJMT7250",
+          },
+
+          {
+            title: "180° RCVRY",
+            url: "./group-logos/180-logo.png",
+            address1: "37 Mackeurtan Avenue",
+            address2: "Durban North, Durban, South Africa",
+            startTime: "15h00",
+            endTime: "16h00",
+            day: "Sunday",
+            email: "jaydamungavin@gmail.com",
+            coords: { lat: -29.776603636355592, lng: 31.045664297183816 },
+            placeId: "ChIJ8etkt0QG9x4RkeI61IHyJ1A",
+          },
+
+          {
+            title: "Online - PEx National",
+            url: "./pex-logo.jpg",
+            address1: "3 Balsemkruidstraat",
+            address2: "Voorhout, Zuid-Holland",
+            startTime: "19h00",
+            endTime: "20h00",
+            day: "Friday",
+            // email: "jaydamungavin@gmail.com",
+            coords: { lat: 52.22244903920066, lng: 4.490548811267541 },
+            placeId:
+              "EjJCYWxzZW1rcnVpZHN0cmFhdCAzLCAyMjE1IFZEIFZvb3Job3V0LCBOZXRoZXJsYW5kcyIwEi4KFAoSCYGOX9ARwcVHEYpHgoq9EuoUEAMqFAoSCYGOX9ARwcVHEdi1dSoGqCXM",
+          },
+        ],
+        mapOptions: {
+          center: { lat: 0, lng: 0 },
+          gestureHandling: "cooperative",
+          fullscreenControl: true,
+          mapTypeControl: false,
+          streetViewControl: false,
+          zoom: 8,
+          zoomControl: true,
+          maxZoom: 80,
+          mapId: "b9f5280014bac665",
+        },
+        mapsApiKey: "AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk",
+        capabilities: {
+          input: true,
+          autocomplete: true,
+          directions: true,
+          distanceMatrix: true,
+          details: true,
+          actions: false,
+        },
+      };
+
+      function initMap() {
+        new LocatorPlus(CONFIGURATION);
+      }
+    </script>
 
     <script
       id="locator-result-items-tmpl"
@@ -977,7 +1597,7 @@
           <button class="select-location">
             <h2 class="name">{{title}}</h2>
           </button>
-          <div class="address">{{address1}}<br />{{address2}}</div>
+          <div class="address main-address">{{address1}}<br />{{address2}}</div>
           <div class="options">
             <div class="option-container">
               <button class="details-button option">
@@ -1042,8 +1662,8 @@
       {{#if location.travelDistanceText}}
         <div class="distance">{{location.travelDistanceText}} away</div>
       {{/if}}
-      <div class="address">
-        <b>{{location.address1}}</b><br />
+      <div class="address area">
+        <p class="road">{{location.address1}}</p>
         {{location.address2}}
       </div>
       <br />
@@ -1056,9 +1676,9 @@
       <div class="address"><span class="start-time-bold">End Time:</span><br />
         {{location.endTime}}</div>
 
-      <div class="email">
-        <a href="mailto: {{location.email}} " class="email-btn">Email</a>
-      </div>
+      <!-- <div class="email">
+      <a href="mailto: {{location.email}}" class="email-btn">Email</a>
+      </div> -->
 
       <div class="atmosphere">
         {{#if place.rating}}
@@ -1159,11 +1779,8 @@
         <div id="locations-panel-list">
           <header>
             <div id="search-branding-container">
-              <img
-                class="search-logo"
-                src="https://ucarecdn.com/e53472ef-dc06-41c5-aedc-154710328ac9/PExLogo1.png"
-              />
-              <h1 class="search-branding">Find a Recovery Group Near You</h1>
+              <img class="search-logo" src="./pex-logo-black.webp" />
+              <h1 class="search-branding">Find a recovery group near you</h1>
             </div>
             <div class="search-input">
               <input
@@ -1196,7 +1813,7 @@
       <div id="gmp-map"></div>
     </div>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABCDE"
+      src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABCDE"
       async
       defer
     ></script>
