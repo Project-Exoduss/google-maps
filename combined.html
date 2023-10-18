@@ -990,7 +990,25 @@
 
     <script defer>
       "use strict";
+      let apiKey;
+      const fetchKey = () => {
+        fetch('http://127.0.0.1:5501/api.json')
+          .then(response => response.json())
+          .then(data => {
+            apiKey = data.api;
+            getApiKey(apiKey)
 
+          })
+          .catch(err => console.error(err));
+      }
+      
+
+        const getApiKey = (data) => {
+          console.log(data);
+          return data
+        }
+
+        fetchKey()
       const CONFIGURATION = {
         locations: [
           {
@@ -1677,6 +1695,8 @@
               "EjJCYWxzZW1rcnVpZHN0cmFhdCAzLCAyMjE1IFZEIFZvb3Job3V0LCBOZXRoZXJsYW5kcyIwEi4KFAoSCYGOX9ARwcVHEYpHgoq9EuoUEAMqFAoSCYGOX9ARwcVHEdi1dSoGqCXM",
           },
         ],
+
+        
         mapOptions: {
           center: { lat: 0, lng: 0 },
           gestureHandling: "cooperative",
@@ -1688,7 +1708,8 @@
           maxZoom: 80,
           mapId: "b9f5280014bac665",
         },
-        mapsApiKey: "AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk",
+        
+        mapsApiKey: fetchKey(),
         capabilities: {
           input: true,
           autocomplete: true,
