@@ -2,5 +2,4 @@
 
 Regulary updated with groups that are launched.
 
-
-Groups are outdated*
+https://www.projectexodus.net/group-locator
