@@ -14,8 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update JSON File
+
         run: |
-          curl -sSL -H "Authorization: Bearer ${{ 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}}" \
+          curl -sSL -H "Authorization: Bearer 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" \
                -H "Accept: application/vnd.github.v3.raw" \
                -o groupData.json \
                https://raw.githubusercontent.com/Project-Exoduss/google-maps/main/groupData.json
