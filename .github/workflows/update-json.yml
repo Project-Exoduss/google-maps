@@ -1,9 +1,8 @@
 name: Update JSON File
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [update-group-data]
 
 jobs:
   update-json:
@@ -35,4 +34,4 @@ jobs:
           git commit -m "Update JSON data"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
