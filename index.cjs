@@ -22,7 +22,6 @@ base(TABLE_NAME)
 		if (records.length > 0) {
 			const mostRecentRecord = records[0];
 			console.log("Most recent record:", mostRecentRecord.fields);
-			const jsonFilePath = "groupData.json";
 
 			const selectedFields = {
 				title: mostRecentRecord.fields.GroupName,
