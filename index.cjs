@@ -39,8 +39,8 @@ base(TABLE_NAME)
 				},
 				placeId: mostRecentRecord.fields.PlaceID,
 			};
+			// console.log(selectedFields);
 			updateJSONFile(selectedFields);
-			console.log(selectedFields);
 		} else {
 			console.log("No records found.");
 		}

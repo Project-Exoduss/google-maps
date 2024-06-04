@@ -763,20 +763,5 @@
 			"lng": 30.678780708479607
 		},
 		"placeId": "ChIJLcZ6EwA59h4RIn1WFo3Qmig"
-	},
-	{
-		"title": "TEST",
-		"url": "https://v5.airtableusercontent.com/v3/u/29/29/1717516800000/GgWUhjqGV_T4Cwer5MTTkw/O-eEp1J5xKAcPfSuLlm1zNoMCa8g2aJjseWPbJ7hilPaEThqz-fs2mxeJY_iafYtJ5E0OEdDyU8J435O2qE5IoApGLDODqiFnZCngqhWGoxZftony8o51rVB3m5RcH63mnUlT39droBfF0zJDpUuJRtvyBXRko6ZXQUzu398bXJtdsI-kf5hekTGGWVTbaSaYIi2_1LxSMPv4B-e_vnjEEI8FQkwl40j8JByQLfclEc/Ijv70P2EBFouI2hP03B9HVMg1lNTO5SiBOBoIqdqnec",
-		"address1": "test",
-		"address2": "test",
-		"startTime": "12:24",
-		"endTime": "17:30",
-		"day": "Tuesday",
-		"email": "test",
-		"coords": {
-			"lat": -29.15043304211052,
-			"lng": 26.166319304521046
-		},
-		"placeId": "ChIJycVYxVjEjx4RRoWVcHU83VM"
 	}
 ]
