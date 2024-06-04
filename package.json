@@ -1,5 +1,17 @@
 {
 	"dependencies": {
+		"airtable": "^0.12.2",
+		"dotenv": "^16.4.5",
 		"tween.js": "^16.6.0"
-	}
+	},
+	"name": "google-maps",
+	"version": "1.0.0",
+	"description": "Regulary updated with groups that are launched.",
+	"main": "config.js",
+	"scripts": {
+		"dev": "node index.cjs"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
 }
