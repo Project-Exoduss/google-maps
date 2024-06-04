@@ -2,7 +2,8 @@ const fs = require("fs");
 const Airtable = require("airtable");
 require("dotenv").config();
 
-const API_KEY = process.env.AIRTABLE_API_KEY;
+const API_KEY =
+	"patD81Rz0YeB7GvKH.dbb58b694f38811445c012c8a4547135aae0efaa4ef5c7d8dc98090d8fe9d346";
 const BASE_ID = "appb47pyO7iVnORcl"; // Update with your base ID
 const TABLE_NAME = "Groups"; // Update with your table name
 

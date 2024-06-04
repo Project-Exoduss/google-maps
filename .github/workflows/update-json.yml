@@ -32,7 +32,7 @@ jobs:
           git config --global user.email "actions@example.com"
           git config --global user.name "GitHub Actions"
           git add groupData.json
-          git commit -m "Update JSON file"
+          git commit -m "Update JSON data"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
