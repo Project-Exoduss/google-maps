@@ -1,0 +1,38 @@
+name: Update JSON File
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Fetch JSON File
+        run: curl -sSL -o groupData.json https://raw.githubusercontent.com/Project-Exoduss/google-maps/main/groupData.json
+
+      - name: Run Update Script
+        run: node index.cjs
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "actions@example.com"
+          git config --global user.name "GitHub Actions"
+          git add groupData.json
+          git commit -m "Update JSON file"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
