@@ -15,2110 +15,1278 @@
 -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Group Locator</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/handlebars/4.7.7/handlebars.min.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto"
-      rel="stylesheet"
-    />
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      #map-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        font-family: "Plus Jakata Sans", sans-serif;
-        box-sizing: border-box;
-      }
-
-      #map-container a {
-        text-decoration: none;
-      }
-
-      .see-on-google {
-        color: #1967d2;
-      }
-
-      #map-container button {
-        background: none;
-        color: inherit;
-        border: none;
-        padding: 0;
-        font: inherit;
-        font-size: inherit;
-        cursor: pointer;
-      }
-
-      #gmp-map {
-        position: absolute;
-        left: 25em;
-        top: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      #locations-panel {
-        position: absolute;
-        left: 0;
-        width: 25em;
-        top: 0;
-        bottom: 0;
-        overflow-y: scroll;
-        background: white;
-        padding: 0 0.5em;
-        box-sizing: border-box;
-      }
-
-      @media only screen and (max-width: 876px) {
-        #gmp-map {
-          left: 0;
-          bottom: 50%;
-        }
-
-        #locations-panel {
-          top: 50%;
-          right: 0;
-          width: unset;
-        }
-      }
-
-      #locations-panel-list > header {
-        padding: 0 1.4em 0 1.4em;
-      }
-
-      #locations-panel-list h1.search-title {
-        font-size: 1em;
-        font-weight: 500;
-        margin: 0;
-      }
-
-      #locations-panel-list h1.search-title > img {
-        vertical-align: bottom;
-        margin-top: -1em;
-      }
-
-      .search-logo {
-        width: 100px;
-        height: auto;
-      }
-
-      #search-branding-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .search-branding {
-        font-size: 2em;
-        margin-top: 1.2em;
-      }
-      #locations-panel-list .search-input {
-        width: 100%;
-        margin-top: 0.8em;
-        position: relative;
-      }
-
-      #locations-panel-list .search-input input {
-        width: 100%;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        border-radius: 0.3em;
-        height: 2.2em;
-        box-sizing: border-box;
-        padding: 0 2.5em 0 1em;
-        font-size: 1em;
-      }
-
-      #locations-panel-list .search-input-overlay {
-        position: absolute;
-      }
-
-      #locations-panel-list .search-input-overlay.search {
-        right: 2px;
-        top: 2px;
-        bottom: 2px;
-        width: 2.4em;
-      }
-
-      #locations-panel-list .search-input-overlay.search button {
-        width: 100%;
-        height: 100%;
-        border-radius: 0.2em;
-        color: black;
-        background: transparent;
-      }
-
-      #locations-panel-list .search-input-overlay.search .icon {
-        margin-top: 0.05em;
-        vertical-align: top;
-      }
-
-      #locations-panel-list .section-name {
-        font-weight: 500;
-        font-size: 0.9em;
-        margin: 1.8em 0 1em 1.5em;
-      }
-
-      #locations-panel-list .location-result {
-        position: relative;
-        padding: 0.8em 3.5em 0.8em 1.4em;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-        cursor: pointer;
-      }
-      #locations-panel-list .location-result:hover {
-        background-color: #1e8fff1a;
-      }
-
-      #locations-panel-list .location-result:first-of-type {
-        border-top: 1px solid rgba(0, 0, 0, 0.12);
-      }
-
-      #locations-panel-list .location-result:last-of-type {
-        border-bottom: none;
-      }
-
-      #locations-panel-list .location-result.selected {
-        outline: 2px solid #1e90ff;
-      }
-
-      #locations-panel-list button.select-location {
-        margin-bottom: 0.6em;
-        text-align: left;
-      }
-
-      #locations-panel-list .location-result h2.name {
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin: 0;
-        padding-right: 0.9em;
-      }
-
-      #locations-panel-list .location-result .address {
-        font-size: 0.9em;
-        margin-bottom: 0.5em;
-        padding-right: 0.9em;
-        line-height: 1.5em;
-      }
-
-      #locations-panel-list .directions-button {
-        position: absolute;
-        right: 1.2em;
-        top: 2.3em;
-      }
-
-      #locations-panel-list .directions-button-background:hover {
-        fill: rgba(116, 120, 127, 0.1);
-      }
-
-      #locations-panel-list .directions-button-background {
-        fill: rgba(255, 255, 255, 0.01);
-      }
-
-      #locations-panel-list .location-result .distance {
-        position: absolute;
-        top: 0.9em;
-        right: 0.9em;
-        text-align: center;
-        font-size: 0.9em;
-        width: 5em;
-      }
-
-      #locations-panel-list .option-container {
-        display: inline-block;
-        margin: 0.2em 0;
-        position: relative;
-      }
-
-      #locations-panel-list .option-container button:hover,
-      #locations-panel-list .option-container a:hover {
-        background-color: #ffffff;
-        color: #1e90ff;
-      }
-
-      #locations-panel-list .option {
-        border: 1px solid #1e90ff;
-        border-radius: 0.2rem;
-        color: #ffffff;
-        font-size: 0.7rem;
-        font-weight: 300;
-        padding: 0.3em 0;
-        background-color: #1e90ff;
-      }
-
-      #locations-panel-list .option > span {
-        margin: 0 0.9em;
-      }
-
-      #location-results-list {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .email {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 2em 0;
-      }
-
-      .email-btn {
-        border: 1px #1e90ff solid;
-        color: #fff;
-        padding: 0.3em 1.2em;
-        background-color: #1e90ff;
-        border-radius: 0.2rem;
-        width: 33.3%;
-        text-align: center;
-      }
-      .email-btn:hover {
-        background-color: #fff;
-        color: #1e90ff;
-      }
-
-      /* ------------- DETAILS PANEL ------------------------------- */
-      #locations-panel-details {
-        padding: 1.5em 1.5em;
-        box-sizing: border-box;
-        display: none;
-      }
-
-      #locations-panel-details .back-button {
-        font-size: 1em;
-        font-weight: 500;
-        color: #1967d2;
-        display: block;
-        text-decoration: none;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        font-family: inherit;
-      }
-
-      #locations-panel-details .back-button .icon {
-        width: 20px;
-        height: 20px;
-        vertical-align: bottom;
-
-        /* Match link color #1967d2 */
-        fill: black;
-      }
-
-      #locations-panel-details > header {
-        text-align: center;
-        /* width: 100px; */
-      }
-
-      #locations-panel-details .banner {
-        margin-top: 1em;
-      }
-
-      #locations-panel-details h2 {
-        font-size: 1.5;
-        font-weight: bold;
-        margin-bottom: 0.3em;
-      }
-
-      #locations-panel-details .distance {
-        font-size: 0.9em;
-        text-align: center;
-      }
-
-      #locations-panel-details .address {
-        text-align: center;
-        font-size: 0.9em;
-        margin-top: 1em;
-        border-radius: 0.5em;
-        border-color: black;
-        display: flex;
-        flex-direction: column;
-        padding: 1em;
-        border: 1px solid;
-      }
-
-      #locations-panel-details .address .start-time-bold {
-        font-weight: bold;
-        margin-bottom: -0.75em;
-      }
-
-      .groupsLogo {
-        margin-top: -1em;
-        width: 100px;
-        height: auto;
-      }
-      #locations-panel-details .atmosphere {
-        text-align: center;
-        font-size: 0.9em;
-        margin: 2em 0;
-      }
-
-      #locations-panel-details .star-rating-numeric {
-        color: #555;
-      }
-
-      #locations-panel-details .star-icon {
-        width: 1.2em;
-        height: 1.2em;
-        margin-right: -0.3em;
-        margin-top: -0.08em;
-        vertical-align: top;
-        filter: invert(88%) sepia(60%) saturate(2073%) hue-rotate(318deg)
-          brightness(93%) contrast(104%);
-      }
-
-      #locations-panel-details .star-icon:last-of-type {
-        margin-right: 0.2em;
-      }
-
-      #locations-panel-details .price-dollars {
-        color: #555;
-      }
-
-      #locations-panel-details hr {
-        height: 1px;
-        color: rgba(0, 0, 0, 0.12);
-        background-color: rgba(0, 0, 0, 0.12);
-        border: none;
-        margin-bottom: 1em;
-      }
-
-      #locations-panel-details .contact {
-        font-size: 0.9em;
-        margin: 0.8em 0;
-        display: flex;
-        align-items: center;
-      }
-
-      #locations-panel-details .contact .icon {
-        flex: 0 0 auto;
-        width: 1.5em;
-        height: 1.5em;
-      }
-
-      #locations-panel-details .contact .right {
-        padding: 0.1em 0 0 1em;
-      }
-
-      #locations-panel-details .hours .weekday {
-        display: inline-block;
-        width: 5em;
-      }
-
-      #locations-panel-details .website a {
-        white-space: nowrap;
-        display: inline-block;
-        overflow: hidden;
-        max-width: 16em;
-        text-overflow: ellipsis;
-      }
-
-      #locations-panel-details p.attribution {
-        color: #777;
-        margin: 0;
-        font-size: 0.8em;
-        font-style: italic;
-      }
-
-      .send-email-btn {
-        border: 1px solid #2370ce;
-        border-radius: 0.9em;
-        color: #000000;
-        font-size: 0.9em;
-        font-weight: 500;
-        padding: 0.3em 0.81em;
-      }
-
-      .area {
-        margin-bottom: -1.1em;
-      }
-
-      .road {
-        margin-bottom: 0.4em;
-        margin-top: 0;
-      }
-    </style>
-    <script defer>
-      "use strict";
-
-      /** Hide a DOM element. */
-      function hideElement(el) {
-        el.style.display = "none";
-      }
-
-      /** Show a DOM element that has been hidden. */
-      function showElement(el) {
-        el.style.display = "block";
-      }
-
-      /** Helper function to generate a Google Maps directions URL */
-      function generateDirectionsURL(origin, destination) {
-        const googleMapsUrlBase = "https://www.google.com/maps/dir/?";
-        const searchParams = new URLSearchParams("api=1");
-        searchParams.append("origin", origin);
-        const destinationParam = [];
-        // Add title to destinationParam except in cases where Quick Builder set
-        // the title to the first line of the address
-        if (destination.title !== destination.address1) {
-          destinationParam.push(destination.title);
-        }
-        destinationParam.push(destination.address1, destination.address2);
-        searchParams.append("destination", destinationParam.join(","));
-        return googleMapsUrlBase + searchParams.toString();
-      }
-
-      /**
-       * Defines an instance of the Locator+ solution, to be instantiated
-       * when the Maps library is loaded.
-       */
-      function LocatorPlus(configuration) {
-        const locator = this;
-
-        locator.locations = configuration.locations || [];
-        locator.capabilities = configuration.capabilities || {};
-
-        const mapEl = document.getElementById("gmp-map");
-        const panelEl = document.getElementById("locations-panel");
-        locator.panelListEl = document.getElementById("locations-panel-list");
-        const sectionNameEl = document.getElementById(
-          "location-results-section-name"
-        );
-        const resultsContainerEl = document.getElementById(
-          "location-results-list"
-        );
-
-        const itemsTemplate = Handlebars.compile(
-          document.getElementById("locator-result-items-tmpl").innerHTML
-        );
-
-        locator.searchLocation = null;
-        locator.searchLocationMarker = null;
-        locator.selectedLocationIdx = null;
-        locator.userCountry = null;
-
-        // Initialize the map -------------------------------------------------------
-        locator.map = new google.maps.Map(mapEl, configuration.mapOptions);
-
-        // Store selection.
-        const selectResultItem = function (
-          locationIdx,
-          panToMarker,
-          scrollToResult
-        ) {
-          locator.selectedLocationIdx = locationIdx;
-          for (let locationElem of resultsContainerEl.children) {
-            locationElem.classList.remove("selected");
-            if (getResultIndex(locationElem) === locator.selectedLocationIdx) {
-              locationElem.classList.add("selected");
-              if (scrollToResult) {
-                panelEl.scrollTop = locationElem.offsetTop;
-              }
-            }
-          }
-          if (panToMarker && locationIdx != null) {
-            locator.map.panTo(locator.locations[locationIdx].coords);
-            locator.map.setZoom(18);
-            locator.map.setTilt(45);
-          }
-        };
-
-        // Create a marker for each location.
-        const markers = locator.locations.map(function (location, index) {
-          const mark = "./ProjectExodusCircle.svg";
-          const marker = new google.maps.Marker({
-            position: location.coords,
-            map: locator.map,
-            title: location.title,
-            icon: mark,
-            optimized: true,
-            scaledSize: new google.maps.Size(25, 25),
-          });
-          marker.addListener("click", function () {
-            selectResultItem(index, true, true);
-          });
-          return marker;
-        });
-
-        function toggleBounce() {
-          if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
-          } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-          }
-        }
-
-        // Fit map to marker bounds.
-        locator.updateBounds = function () {
-          const bounds = new google.maps.LatLngBounds();
-          if (locator.searchLocationMarker) {
-            bounds.extend(locator.searchLocationMarker.getPosition());
-          }
-          for (let i = 0; i < markers.length; i++) {
-            bounds.extend(markers[i].getPosition());
-          }
-          locator.map.fitBounds(bounds);
-        };
-        if (locator.locations.length) {
-          locator.updateBounds();
-        }
-
-        // Get the distance of a store location to the user's location,
-        // used in sorting the list.
-        const getLocationDistance = function (location) {
-          if (!locator.searchLocation) return null;
-
-          // Use travel distance if available (from Distance Matrix).
-          if (location.travelDistanceValue != null) {
-            return location.travelDistanceValue;
-          }
-
-          // Fall back to straight-line distance.
-          return google.maps.geometry.spherical.computeDistanceBetween(
-            new google.maps.LatLng(location.coords),
-            locator.searchLocation.location
-          );
-        };
-
-        // Render the results list --------------------------------------------------
-
-        // When the results list re-renders, always update directions on the
-        // first selection event.
-        let updateDirectionsOnSelect;
-
-        const getResultIndex = function (elem) {
-          return parseInt(elem.getAttribute("data-location-index"));
-        };
-
-        locator.renderResultsList = function () {
-          let locations = locator.locations.slice();
-          for (let i = 0; i < locations.length; i++) {
-            locations[i].index = i;
-          }
-          if (locator.searchLocation) {
-            sectionNameEl.textContent =
-              "Nearest locations (" + locations.length + ")";
-            locations.sort(function (a, b) {
-              return getLocationDistance(a) - getLocationDistance(b);
-            });
-          } else {
-            sectionNameEl.textContent = `All locations (${locations.length})`;
-          }
-          const resultItemContext = { locations: locations };
-          resultsContainerEl.innerHTML = itemsTemplate(resultItemContext);
-          updateDirectionsOnSelect = true;
-          for (let item of resultsContainerEl.children) {
-            const resultIndex = getResultIndex(item);
-            if (resultIndex === locator.selectedLocationIdx) {
-              item.classList.add("selected");
-            }
-
-            const resultSelectionHandler = function () {
-              if (
-                resultIndex !== locator.selectedLocationIdx ||
-                updateDirectionsOnSelect
-              ) {
-                selectResultItem(resultIndex, true, false);
-                locator.updateDirections();
-                updateDirectionsOnSelect = false;
-              }
-            };
-
-            // Clicking anywhere on the item selects this location.
-            // Additionally, create a button element to make this behavior
-            // accessible under tab navigation.
-            item.addEventListener("click", resultSelectionHandler);
-            item
-              .querySelector(".select-location")
-              .addEventListener("click", function (e) {
-                resultSelectionHandler();
-                e.stopPropagation();
-              });
-
-            item
-              .querySelector(".details-button")
-              .addEventListener("click", function () {
-                locator.showDetails(resultIndex);
-              });
-
-            // Clicking the directions button will open Google Maps directions in a
-            // new tab
-            const origin =
-              locator.searchLocation != null
-                ? locator.searchLocation.location
-                : "";
-            const destination = locator.locations[resultIndex];
-            const googleMapsUrl = generateDirectionsURL(origin, destination);
-            item
-              .querySelector(".directions-button")
-              .setAttribute("href", googleMapsUrl);
-          }
-        };
-
-        // Optional capability initialization --------------------------------------
-        initializeSearchInput(locator);
-        initializeDistanceMatrix(locator);
-        initializeDirections(locator);
-        initializeDetails(locator);
-
-        // Initial render of results -----------------------------------------------
-        locator.renderResultsList();
-      }
-
-      /** When the search input capability is enabled, initialize it. */
-      function initializeSearchInput(locator) {
-        const geocodeCache = new Map();
-        const geocoder = new google.maps.Geocoder();
-
-        const searchInputEl = document.getElementById("location-search-input");
-        const searchButtonEl = document.getElementById(
-          "location-search-button"
-        );
-
-        const updateSearchLocation = function (address, location) {
-          if (locator.searchLocationMarker) {
-            locator.searchLocationMarker.setMap(null);
-          }
-          if (!location) {
-            locator.searchLocation = null;
-            return;
-          }
-          locator.searchLocation = {
-            address: address,
-            location: location,
-          };
-          locator.searchLocationMarker = new google.maps.Marker({
-            position: location,
-            map: locator.map,
-            title: "My location",
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 12,
-              fillColor: "#3367D6",
-              fillOpacity: 0.5,
-              strokeOpacity: 0,
-            },
-          });
-
-          // Update the locator's idea of the user's country, used for units. Use
-          // `formatted_address` instead of the more structured `address_components`
-          // to avoid an additional billed call.
-          const addressParts = address.split(" ");
-          locator.userCountry = addressParts[addressParts.length - 1];
-
-          // Update map bounds to include the new location marker.
-          locator.updateBounds();
-
-          // Update the result list so we can sort it by proximity.
-          locator.renderResultsList();
-
-          locator.updateTravelTimes();
-
-          locator.clearDirections();
-        };
-
-        const geocodeSearch = function (query) {
-          if (!query) {
-            return;
-          }
-
-          const handleResult = function (geocodeResult) {
-            searchInputEl.value = geocodeResult.formatted_address;
-            updateSearchLocation(
-              geocodeResult.formatted_address,
-              geocodeResult.geometry.location
-            );
-          };
-
-          if (geocodeCache.has(query)) {
-            handleResult(geocodeCache.get(query));
-            return;
-          }
-          const request = {
-            address: query,
-            bounds: locator.map.getBounds(),
-          };
-          geocoder.geocode(request, function (results, status) {
-            if (status === "OK") {
-              if (results.length > 0) {
-                const result = results[0];
-                geocodeCache.set(query, result);
-                handleResult(result);
-              }
-            }
-          });
-        };
-
-        // Set up geocoding on the search input.
-        searchButtonEl.addEventListener("click", function () {
-          geocodeSearch(searchInputEl.value.trim());
-        });
-
-        // Initialize Autocomplete.
-        initializeSearchInputAutocomplete(
-          locator,
-          searchInputEl,
-          geocodeSearch,
-          updateSearchLocation
-        );
-      }
-
-      /** Add Autocomplete to the search input. */
-      function initializeSearchInputAutocomplete(
-        locator,
-        searchInputEl,
-        fallbackSearch,
-        searchLocationUpdater
-      ) {
-        // Set up Autocomplete on the search input. Bias results to map viewport.
-        const autocomplete = new google.maps.places.Autocomplete(
-          searchInputEl,
-          {
-            types: ["geocode"],
-            fields: ["place_id", "formatted_address", "geometry.location"],
-          }
-        );
-        autocomplete.bindTo("bounds", locator.map);
-        autocomplete.addListener("place_changed", function () {
-          const placeResult = autocomplete.getPlace();
-          if (!placeResult.geometry) {
-            // Hitting 'Enter' without selecting a suggestion will result in a
-            // placeResult with only the text input value as the 'name' field.
-            fallbackSearch(placeResult.name);
-            return;
-          }
-          searchLocationUpdater(
-            placeResult.formatted_address,
-            placeResult.geometry.location
-          );
-        });
-      }
-
-      /** Initialize Distance Matrix for the locator. */
-      function initializeDistanceMatrix(locator) {
-        const distanceMatrixService = new google.maps.DistanceMatrixService();
-
-        // Annotate travel times to the selected location using Distance Matrix.
-        locator.updateTravelTimes = function () {
-          if (!locator.searchLocation) return;
-
-          const units =
-            locator.userCountry === "USA"
-              ? google.maps.UnitSystem.IMPERIAL
-              : google.maps.UnitSystem.METRIC;
-          const request = {
-            origins: [locator.searchLocation.location],
-            destinations: locator.locations.map(function (x) {
-              return x.coords;
-            }),
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: units,
-          };
-          const callback = function (response, status) {
-            if (status === "OK") {
-              const distances = response.rows[0].elements;
-              for (let i = 0; i < distances.length; i++) {
-                const distResult = distances[i];
-                let travelDistanceText, travelDistanceValue;
-                if (distResult.status === "OK") {
-                  travelDistanceText = distResult.distance.text;
-                  travelDistanceValue = distResult.distance.value;
-                }
-                const location = locator.locations[i];
-                location.travelDistanceText = travelDistanceText;
-                location.travelDistanceValue = travelDistanceValue;
-              }
-
-              // Re-render the results list, in case the ordering has changed.
-              locator.renderResultsList();
-            }
-          };
-          distanceMatrixService.getDistanceMatrix(request, callback);
-        };
-      }
-
-      /** Initialize Directions service for the locator. */
-      function initializeDirections(locator) {
-        const directionsCache = new Map();
-        const directionsService = new google.maps.DirectionsService();
-        const directionsRenderer = new google.maps.DirectionsRenderer({
-          suppressMarkers: true,
-        });
-        locator.updateDirections = function () {
-          if (!locator.searchLocation || locator.selectedLocationIdx == null) {
-            return;
-          }
-          const cacheKey = JSON.stringify([
-            locator.searchLocation.location,
-            locator.selectedLocationIdx,
-          ]);
-          if (directionsCache.has(cacheKey)) {
-            const directions = directionsCache.get(cacheKey);
-            directionsRenderer.setMap(locator.map);
-            directionsRenderer.setDirections(directions);
-            return;
-          }
-          const request = {
-            origin: locator.searchLocation.location,
-            destination: locator.locations[locator.selectedLocationIdx].coords,
-            travelMode: google.maps.TravelMode.DRIVING,
-          };
-          directionsService.route(request, function (response, status) {
-            if (status === "OK") {
-              directionsRenderer.setMap(locator.map);
-              directionsRenderer.setDirections(response);
-              directionsCache.set(cacheKey, response);
-            }
-          });
-        };
-
-        locator.clearDirections = function () {
-          directionsRenderer.setMap(null);
-        };
-      }
-
-      /** Initialize Place Details service and UI for the locator. */
-      function initializeDetails(locator) {
-        const panelDetailsEl = document.getElementById(
-          "locations-panel-details"
-        );
-        const detailsService = new google.maps.places.PlacesService(
-          locator.map
-        );
-
-        const detailsTemplate = Handlebars.compile(
-          document.getElementById("locator-details-tmpl").innerHTML
-        );
-
-        const renderDetails = function (context) {
-          panelDetailsEl.innerHTML = detailsTemplate(context);
-          panelDetailsEl
-            .querySelector(".back-button")
-            .addEventListener("click", hideDetails);
-        };
-
-        const hideDetails = function () {
-          showElement(locator.panelListEl);
-          hideElement(panelDetailsEl);
-        };
-
-        locator.showDetails = function (locationIndex) {
-          const location = locator.locations[locationIndex];
-          const context = { location };
-
-          // Helper function to create a fixed-size array.
-          const initArray = function (arraySize) {
-            const array = [];
-            while (array.length < arraySize) {
-              array.push(0);
-            }
-            return array;
-          };
-
-          if (location.placeId) {
-            const request = {
-              placeId: location.placeId,
-              fields: [
-                "formatted_phone_number",
-                "website",
-                "opening_hours",
-                "url",
-                "utc_offset_minutes",
-                "price_level",
-                "rating",
-                "user_ratings_total",
-              ],
-            };
-            detailsService.getDetails(request, function (place, status) {
-              if (status == google.maps.places.PlacesServiceStatus.OK) {
-                if (place.opening_hours) {
-                  const daysHours = place.opening_hours.weekday_text
-                    .map((e) => e.split(/\:\s+/))
-                    .map((e) => ({
-                      days: e[0].substr(0, 3),
-                      hours: e[1],
-                    }));
-
-                  for (let i = 1; i < daysHours.length; i++) {
-                    if (daysHours[i - 1].hours === daysHours[i].hours) {
-                      if (daysHours[i - 1].days.indexOf("-") !== -1) {
-                        daysHours[i - 1].days = daysHours[i - 1].days.replace(
-                          /\w+$/,
-                          daysHours[i].days
-                        );
-                      } else {
-                        daysHours[i - 1].days += " - " + daysHours[i].days;
-                      }
-                      daysHours.splice(i--, 1);
-                    }
-                  }
-                  place.openingHoursSummary = daysHours;
-                }
-                if (place.rating) {
-                  const starsOutOfTen = Math.round(2 * place.rating);
-                  const fullStars = Math.floor(starsOutOfTen / 2);
-                  const halfStars = fullStars !== starsOutOfTen / 2 ? 1 : 0;
-                  const emptyStars = 5 - fullStars - halfStars;
-
-                  // Express stars as arrays to make iterating in Handlebars easy.
-                  place.fullStarIcons = initArray(fullStars);
-                  place.halfStarIcons = initArray(halfStars);
-                  place.emptyStarIcons = initArray(emptyStars);
-                }
-                if (place.price_level) {
-                  place.dollarSigns = initArray(place.price_level);
-                }
-                if (place.website) {
-                  const url = new URL(place.website);
-                  place.websiteDomain = url.hostname;
-                }
-
-                context.place = place;
-                renderDetails(context);
-              }
-            });
-          }
-          renderDetails(context);
-          hideElement(locator.panelListEl);
-          showElement(panelDetailsEl);
-        };
-      }
-    </script>
-
-    <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
-    <!-- Config.js -->
-
-    <script defer>
-      "use strict";
-      let apiKey;
-      const fetchKey = () => {
-        fetch("http://127.0.0.1:5501/api.json")
-          .then((response) => response.json())
-          .then((data) => {
-            apiKey = data.api;
-            getApiKey(apiKey);
-          })
-          .catch((err) => console.error(err));
-      };
-
-      const getApiKey = (data) => {
-        console.log(data);
-        return data;
-      };
-
-      fetchKey();
-      const CONFIGURATION = {
-        locations: [
-          {
-            title: "Hilton Christian Fellowship",
-            url: "./group-logos/hcf-logo.webp",
-            address1: "Hilton Christian Fellowship, Elizabeth Dr",
-            address2: "Hilton, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Monday",
-            email: "candy@hcf.org.za",
-            coords: {
-              lat: -29.537062354602288,
-              lng: 30.299368024423206,
-            },
-            placeId: "ChIJ2aXMdHal9h4RSDYldKm-sp8",
-          },
-
-          {
-            title: "SBC Project Exodus",
-            url: "./group-logos/sbc-logo.webp",
-            address1: "33 Drake Road, Nahoon",
-            address2: "East London, South Africa",
-            startTime: "18h00",
-            endTime: "19h00",
-            day: "Monday",
-            email: "mark.wood8106@gmail.com",
-            coords: {
-              lat: -32.98808477937387,
-              lng: 27.927394466316418,
-            },
-            placeId: "ChIJSc7qqdUfZx4R62mCvhJ_5r0",
-          },
-
-          {
-            title: "Life Changers",
-            url: "./group-logos/lifechangers-logo.webp",
-            address1: "Life Changers Church, Corner Echium Rd & Raats Drive",
-            address2: "Tableview, Cape Town, South Africa",
-            startTime: "18h30",
-            endTime: "21h00",
-            day: "Monday",
-            email: "michael@lifechangers.org.za",
-            coords: {
-              lat: -33.816657692634074,
-              lng: 18.493900156314396,
-            },
-            placeId: "ChIJvwSzkxRfzB0RRD0wQ8dNANA",
-          },
-
-          {
-            title: "DCC, Mayville",
-            url: "./group-logos/dcc-logo.webp",
-            address1: "37 Garth Road",
-            address2: "Mayville, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Monday",
-            email: "info@dcc-admin.co.za",
-            coords: {
-              lat: -29.843339971829792,
-              lng: 30.98177965327462,
-            },
-            placeId: "ChIJhSEwp64A9x4RkkbCvizJsIU",
-          },
-
-          {
-            title: "Grace Family Church, Riverside",
-            url: "./group-logos/grace-logo.webp",
-            address1: "63 Anthony Road",
-            address2: "Umgeni Park, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Monday",
-            email: "nicholaseaves07@gmail.com",
-            coords: {
-              lat: -29.801151714988045,
-              lng: 31.021460650446965,
-            },
-            placeId: "ChIJLdGlyBwH9x4RPmwwOerDPCc",
-          },
-
-          {
-            title: "Koinonia Recovery Centre - Nahoon",
-            url: "./group-logos/koinonia-logo.webp",
-            address1: "4 Kennington Road",
-            address2: "Nahoon, East London, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Monday",
-            email: "info@koinoniarehab.co.za",
-            coords: {
-              lat: -32.98506424967285,
-              lng: 27.92061811355504,
-            },
-            placeId: "ChIJra3pGCngZh4RWAI3otBlJF8",
-          },
-
-          {
-            title: "ADCA, Ballito",
-            url: "./group-logos/adca-logo.webp",
-            address1:
-              "Against Drugs & Child Abuse Main Street, Umhlali Village",
-            address2: "Ballito, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Monday",
-            email: "rex@adca.co.za",
-            coords: {
-              lat: -29.477569210529442,
-              lng: 31.217267688818815,
-            },
-            placeId: "ChIJITux27YV9x4Rgi-v7AgUDaw",
-          },
-
-          {
-            title: "Norwegian Settlers",
-            url: "./group-logos/norwegian-logo.webp",
-            address1: "Lot no 17, Marburg Settlement, Izotsha Road",
-            address2: "Marburg, Port Shepstone, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Monday",
-            email: "nscrecoverykzn@gmail.com",
-            coords: {
-              lat: -30.755139137337903,
-              lng: 30.4102875940037,
-            },
-            placeId: "ChIJ47WPCSOkWB4R-19RwPkWvYk",
-          },
-
-          {
-            title: "City Hill Recovery",
-            url: "./group-logos/cityhill-logo.webp",
-            address1: "1 Greenmeadow Lane, Belverdere, Ext 1",
-            address2: "Hillcrest, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Monday",
-            email: "hello@cityhill.co.za",
-            coords: {
-              lat: -29.76091803476649,
-              lng: 30.78010302443427,
-            },
-            placeId: "ChIJ-weaWRP79h4RYi13Qtb8Bco",
-          },
-
-          {
-            title: "Home Ground, Westville",
-            url: "./group-logos/homeground-logo.webp",
-            address1: "Home Ground Church, 2 Church Place",
-            address2: "Westville, Durban, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Monday",
-            email: "office@homeground.org.za",
-            coords: {
-              lat: -29.836621994645135,
-              lng: 30.913974366765377,
-            },
-            placeId: "ChIJiZdZ7zkA9x4R1Q4gzXUeX-w",
-          },
-
-          {
-            title: "Cedar Hill Recovery",
-            url: "./group-logos/cedarhill-logo.webp",
-            address1: "Cedar Hill Church",
-            address2: "27 Commercial Road, Amanzimtoti, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Monday",
-            email: ["gerhardus@cedarhill.email", "nathanwells@yahoo.co.uk"],
-            coords: {
-              lat: -30.05804885309866,
-              lng: 30.88100975328515,
-            },
-            placeId: "ChIJW-hwsnNN9h4Ra70fG9l5n4w",
-          },
-
-          {
-            title: "Trinity Baptist Church",
-            url: "./group-logos/trinitybaptist-logo.webp",
-            address1: "2-6 Boeing Road",
-            address2: "Ext 2/6 Buffalo Flats, East London South Africa",
-            startTime: "19h00",
-            endTime: "20h00",
-            day: "Monday",
-            email: "alrichsmith84@gmail.com",
-            coords: {
-              lat: -33.0118853234336,
-              lng: 27.838806596256152,
-            },
-            placeId: "ChIJb3mnrd7hZh4RxM_IKATKumY",
-          },
-
-          {
-            title: "IGrow Recovery - Strand",
-            url: "./group-logos/igrow-logo.webp",
-            address1:
-              "DR Church Hall, Corner of Fagan and Birkenhead Street, Strand",
-            address2: "Cape Town, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Monday",
-            email: "gerriteng@gmail.com",
-            coords: {
-              lat: -34.11314790118012,
-              lng: 18.826828895825372,
-            },
-            placeId: "ChIJOQkwIMHKzR0RDNQEpxaLyeA",
-          },
-
-          {
-            title: "Recovery Station - Brookeborough",
-            url: "./group-logos/recoverystation-logo.webp",
-            address1:
-              "Railway Station Brookeborough Road Brookeborough County Fermanagh BT94 4DN",
-            address2: "Brookeborough, Northern Ireland",
-            startTime: "20h00",
-            endTime: "21h30",
-            day: "Monday",
-            email: ["ryan@recoverystation.uk", "rebecca@recoverystation.uk"],
-            coords: {
-              lat: 54.31433529855026,
-              lng: -7.408131307607052,
-            },
-            placeId: "ChIJ15Fs3eo7XkgRyknogOTtur0",
-          },
-
-          {
-            title: "Recovery Station - Lisbellaw",
-            url: "./group-logos/recoverystation-logo.webp",
-            address1: "The Forge, 9 Brook Street",
-            address2: "Lisbellaw, Northern Ireland",
-            startTime: "20h00",
-            endTime: "21h00",
-            day: "Monday",
-            email: ["ryan@recoverystation.uk", "rebecca@recoverystation.uk"],
-            coords: {
-              lat: 54.31721024047425,
-              lng: -7.535856709960853,
-            },
-            placeId: "ChIJ0772pZE4XkgRPw4lUnMI1Vk",
-          },
-
-          {
-            title: "Koinonia Recovery Centre - Gonubie",
-            url: "./group-logos/koinonia-logo.webp",
-            address1: "2 Recreation Road",
-            address2: "Gonubie, East London, South Africa",
-            startTime: "16h30",
-            endTime: "18h30",
-            day: "Monday",
-            email: "info@koinoniarehab.co.za",
-            coords: {
-              lat: -32.93670459438359,
-              lng: 28.02606345343405,
-            },
-            placeId: "ChIJdWSswbEYZx4RnSHxXFmaiF8",
-          },
-
-          //
-          {
-            title: "ABC Ministries, Phoenix",
-            url: "./group-logos/abc-logo.webp",
-            address1: "5 Fairlen Way",
-            address2: "Phoenix, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Tuesday",
-            email: "solomongopaul@gmail.com",
-            coords: {
-              lat: -29.696305977383137,
-              lng: 30.995308292990234,
-            },
-            placeId: "ChIJtcJivKME9x4RyRb5BF0L_rg",
-          },
-
-          {
-            title: "ADCA, Supporters",
-            url: "./group-logos/adca-logo.webp",
-            address1: "ADCA",
-            address2: "Dolphin Coast, South Africa",
-            startTime: "10h30",
-            endTime: "12h30",
-            day: "Tuesday",
-            email: "rex@adca.co.za",
-            coords: {
-              lat: -29.47734271598032,
-              lng: 31.21729652243871,
-            },
-            placeId: "ChIJITux27YV9x4Rgi-v7AgUDaw",
-          },
-
-          {
-            title: "Christian Family Church - Tembisa ",
-            url: "./group-logos/tembisa-logo.webp",
-            address1: "Tembisa CFC, 5140 RTJ Namane Drive",
-            address2: "Hospital Gardens, Tembisa, South Africa",
-            startTime: "18h00",
-            endTime: "20h00",
-            day: "Tuesday",
-            email: "moses.moyana@standardbank.co.za",
-            coords: {
-              lat: -25.9819162882114,
-              lng: 28.2426111107664,
-            },
-            placeId: "ChIJ9a08FX1plR4Ru6200J8u_3w",
-          },
-
-          {
-            title: "One Life Recovery",
-            url: "./group-logos/onelife-logo.webp",
-            address1: "69 Worlds View Road",
-            address2: "Worlds View, Pietermaritzburg, South Africa",
-            startTime: "18h15",
-            endTime: "21h15",
-            day: "Tuesday",
-            email: "recovery@onelifechurch.org.za",
-            coords: {
-              lat: -29.579779900347447,
-              lng: 30.327895968369862,
-            },
-            placeId: "ChIJDSKC57yl9h4R9-ivqyoL5vM",
-          },
-
-          {
-            title: "Lighthouse Recovery",
-            url: "./group-logos/lighthouse-logo.webp",
-            address1: "20 Waratah Avenue, Melkbosstrand",
-            address2: "Cape Town, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Tuesday",
-            email: "bwhitticom@gmail.com",
-            coords: {
-              lat: -33.73499821864693,
-              lng: 18.442611071879575,
-            },
-            placeId: "ChIJaXJbgrn0zB0RLo57HAz7-Ak",
-          },
-
-          {
-            title: "Grace Family Church, Ballito",
-            url: "./group-logos/grace-logo.webp",
-            address1: "R102 Compensation",
-            address2: "Ballito, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Tuesday",
-            email: "barry@rootedlife.co.za",
-            coords: {
-              lat: -29.511864426325968,
-              lng: 31.181216195993496,
-            },
-            placeId: "ChIJlR2iS3kU9x4RDeZOWT1tSEQ",
-          },
-
-          {
-            title: "Urban Recovery, Midrand",
-            url: "./group-logos/urban-logo.webp",
-            address1: "Urban Life Church, 64 Main Avenue",
-            address2: "Crowthorn, Midrand, South Africa",
-            startTime: "19h00",
-            endTime: "21h00",
-            day: "Tuesday",
-            email: "steven@urbanrecovery.co.za",
-            coords: {
-              lat: -25.97104847884356,
-              lng: 28.079178010766,
-            },
-            placeId: "ChIJwx9Hqk1wlR4RISpvEuGubWQ",
-          },
-
-          // {
-          //   title: "Acts Christian Church",
-          //   url: "./group-logos/acts-logo.png",
-          //   address1: "241 Pretorius Road, Vorna Valley",
-          //   address2: "Midrand, South Africa",
-          //   startTime: "18h30",
-          //   endTime: "20h00",
-          //   day: "Tuesday",
-          //   email: "counselling@actschurch.co.za",
-          //   coords: {
-          //     lat: -26.005395025931403,
-          //     lng: 28.113405552962732,
-          //   },
-          //   placeId:
-          //     "Ejo0MSBQcmV0b3JpdXMgUmQsIFZvcm5hIFZhbGxleSwgTWlkcmFuZCwgMTY4NiwgU291dGggQWZyaWNhIjASLgoUChIJTWimLQJulR4RKwzsxdp_9uYQKSoUChIJ0SCJK_5xlR4RWldVyKh3FFQ",
-          // },
-
-          {
-            title: "The Rock Church",
-            url: "./group-logos/rock-logo.webp",
-            address1: "1 Tamarind Close",
-            address2: "Sunningdale, Durban, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Tuesday",
-            email: "therockrecovery1@gmail.com",
-            coords: {
-              lat: -29.740857479102882,
-              lng: 31.050975015833664,
-            },
-            placeId: "ChIJf175edwF9x4RzYerN0YQm0s",
-          },
-
-          {
-            title: "New Creation Recovery",
-            url: "./group-logos/new-creation-logo.webp",
-            address1: "New Creation Church, 4 Gemsbok Road",
-            address2: "Robin Hills, Randburg, South Africa",
-            startTime: "19h00",
-            endTime: "21h00",
-            day: "Tuesday",
-            email: "recovery@newcreation.co.za",
-            coords: {
-              lat: -26.11510193211336,
-              lng: 27.980491890648484,
-            },
-            placeId: "ChIJV3Z91bR1lR4ReGOveFtcew8",
-          },
-
-          //
-          {
-            title: "Recovery Unlimited, Nelspruit",
-            url: "./group-logos/unlimited-logo.webp",
-            address1: "Plot 99, Barberton Road",
-            address2: "Mbombela, Nelspruit, South Africa",
-            startTime: "18h00",
-            endTime: "20h30",
-            day: "Wednesday",
-            email: "info@churchunlimited.co.za",
-            coords: {
-              lat: -25.5085400504929,
-              lng: 30.952163341148246,
-            },
-            placeId: "ChIJ78SoW61L6B4ROmP4orAMEgs",
-          },
-
-          {
-            title: "IGrow",
-            url: "./group-logos/igrow-logo.webp",
-            address1: "Bloemendal St",
-            address2: "Lilyvale, Bloemfontein, South Africa",
-            startTime: "18h00",
-            endTime: "19h30",
-            day: "Wednesday",
-            email: "igrow.rg@gmail.com",
-            coords: {
-              lat: -29.07183017043761,
-              lng: 26.204128707354755,
-            },
-            placeId: "ChIJyXJ9H-vajx4RA5uzOThqglw",
-          },
-
-          {
-            title: "Recovery Unlimited, White River",
-            url: "./group-logos/unlimited-logo.webp",
-            address1: "Church Unlimited, Plot 50",
-            address2: "Touyz Rd, White River, South Africa",
-            startTime: "18h00",
-            endTime: "20h30",
-            day: "Wednesday",
-            email: "info@churchunlimited.co.za",
-            coords: {
-              lat: -25.350734770006962,
-              lng: 31.00400287615004,
-            },
-            placeId: "ChIJa_djMEIx6B4RtIUWzqa8X_U",
-          },
-
-          {
-            title: "Anthem Recovery",
-            url: "./group-logos/anthem-logo.webp",
-            address1: "37 Mackeurtan Avenue, Durban North",
-            address2: "Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Wednesday",
-            email: "chris@projectexodus.net",
-            coords: {
-              lat: -29.776585011774657,
-              lng: 31.045632110675818,
-            },
-            placeId: "ChIJ8etkt0QG9x4RkeI61IHyJ1A",
-          },
-
-          {
-            title: "Hillsong Recovery - Somerset West",
-            url: "./group-logos/hillsong-logo.webp",
-            address1: "Somerset West Mall, Corner Century Drive & Main Road",
-            address2: "Cape Town, South Africa",
-            startTime: "18h30",
-            endTime: "21h00",
-            day: "Wednesday",
-            email: "lizzievissie@gmail.com",
-            coords: {
-              lat: -34.086153266549324,
-              lng: 18.826782121607717,
-            },
-            placeId: "ChIJVf2xIV-1zR0RjtC95i9wy24",
-          },
-
-          {
-            title: "Hillsong Recovery - Century City",
-            url: "./group-logos/hillsong-logo.webp",
-            address1: "Hillsong Church, Century City 1 Kinetic Avenue",
-            address2: "Cape Town, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Wednesday",
-            email: "hugo.marchand@hillsong.co.za",
-            coords: {
-              lat: -33.89539724589117,
-              lng: 18.506769428357728,
-            },
-            placeId: "ChIJdfMhFxFczB0R6jMgOhmE41Q",
-          },
-
-          {
-            title: "Hillsong North Recovery",
-            url: "./group-logos/hillsong-logo.webp",
-            address1: "Hillsong Church, Northern Suburbs, Bellville",
-            address2: "Cape Town, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Wednesday",
-            email: "hugo.marchand@hillsong.co.za",
-            coords: {
-              lat: -33.872370622333,
-              lng: 18.63338469581211,
-            },
-            placeId: "ChIJpaFj6MVRzB0RCatuMPOYCw4",
-          },
-
-          {
-            title: "Urban Recovery, Centurion",
-            url: "./group-logos/urban-logo.webp",
-            address1: "Hillsong Centurion Plum Court, 877 Freight Road",
-            address2: "Louwlardia, Centurion, South Africa",
-            startTime: "19h00",
-            endTime: "21h00",
-            day: "Wednesday",
-            email: "steven@projectexodus.net",
-            coords: {
-              lat: -25.908807958772822,
-              lng: 28.16021094633214,
-            },
-            placeId: "ChIJ8aYnuy1klR4R-1WvWVn0F7s",
-          },
-
-          {
-            title: "ABC Recovery, Chatsworth",
-            url: "./group-logos/abc-logo.webp",
-            address1: "Grace Worship Tabernacle, 31 Uranus Street",
-            address2: "Woodhurst, Chatsworth, Durban, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Wednesday",
-            email: "solomongopaul@gmail.com",
-            coords: {
-              lat: -29.90520727742246,
-              lng: 30.903605312531912,
-            },
-            placeId: "ChIJ7adNOdGq9x4RT8_HJvUUYNY",
-          },
-
-          {
-            title: "Koinonia Recovery Centre",
-            url: "./group-logos/koinonia-logo.png",
-            address1: "Near Umzimvubu St",
-            address2: "Nompumelelo, East London, South Africa",
-            startTime: "13h00",
-            endTime: "14h00",
-            day: "Wednesday",
-            email: "zandile@koinoniarehab.co.za",
-            coords: {
-              lat: -32.954287138729164,
-              lng: 27.924731584655998,
-            },
-            placeId:
-              "EjpVbXppbXZ1YnUgU3QsIE5vbXB1bWVsZWxvLCBFYXN0IExvbmRvbiwgNTI0MSwgU291dGggQWZyaWNhIi4qLAoUChIJRVwt2wHgZh4Rp_dcExaKX10SFAoSCRvox4YB4GYeEfjDXHjh7HQ8",
-          },
-
-          //
-
-          {
-            title: "One Life South",
-            url: "./group-logos/onelife-logo.webp",
-            address1: "498 Alexandra Road Extension",
-            address2: "Pietermaritzburg, South Africa",
-            startTime: "18h00",
-            endTime: "20h00",
-            day: "Thursday",
-            email: "cmerryweather81@gmail.com",
-            coords: {
-              lat: -29.64604818472893,
-              lng: 30.38345035313002,
-            },
-            placeId: "ChIJzSp0owy99h4RVKhrcbdahiY",
-          },
-
-          {
-            title: "Evangelical Bible Church",
-            url: "./group-logos/evangelical-logo.webp",
-            address1: "Evangelical Bible Church, 127 Adelaar Road",
-            address2: "Pietermaritzburg, South Africa",
-            startTime: "18h30",
-            endTime: "20h0",
-            day: "Thursday",
-            email: "pjthompson.eastwoodebc@gmail.com",
-            coords: {
-              lat: -29.58203389905218,
-              lng: 30.423330108428043,
-            },
-            placeId: "ChIJd9Jymw-89h4RI7xtkeDk7QY",
-          },
-
-          {
-            title: "NG Universitas Wes/ Rooikerk ",
-            url: "./group-logos/rooikerk-logo.png",
-            address1: "28 De Bruyn St, Universitas",
-            address2: "Bloemfontein, South Africa",
-            startTime: "18h00",
-            endTime: "20h0",
-            day: "Thursday",
-            email: "igrow.rg@gmail.com",
-            coords: {
-              lat: -29.122279597494067,
-              lng: 26.167738324442084,
-            },
-            placeId: "ChIJs0bZmcPEjx4RKeijt2ALDCY",
-          },
-
-          {
-            title: "IGrow Recovery",
-            url: "./group-logos/igrow-logo.webp",
-            address1: "Bloemfontein Baptiste Kerk, Van Blerk Ave",
-            address2: "Bloemfontein, South Africa",
-            startTime: "18h00",
-            endTime: "20h00",
-            day: "Thursday",
-            email: "igrow.rg@gmail.com",
-            coords: {
-              lat: -29.085884855332047,
-              lng: 26.167114232492445,
-            },
-            placeId: "ChIJlSXutT3bjx4RAIJ9J7U6nPc",
-          },
-
-          {
-            title: "Hope Restoration Ministries",
-            url: "./group-logos/hope-logo.webp",
-            address1: "1 Beynon Close, Zuurfontein 33-Ir",
-            address2: "Kempton Park, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Thursday",
-            email: "smatumba@hrm.org.za",
-            coords: {
-              lat: -26.07946725401902,
-              lng: 28.188342912414996,
-            },
-            placeId: "ChIJjcmMnbRslR4RaYfqW7qZJoQ",
-          },
-
-          {
-            title: "ABC Recovery, Caneside",
-            url: "./group-logos/abc-logo.webp",
-            address1: "Brook Christian Fellowship, 22 Spireside",
-            address2: "Candeside, Phoenix, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Thursday",
-            email: "solomongopaul@gmail.com",
-            coords: {
-              lat: -29.688786532423933,
-              lng: 31.007464699033054,
-            },
-            placeId: "ChIJF4SMs-wF9x4Rb6OZrpuV53Y",
-          },
-
-          {
-            title: "Kairos Recovery, Bluff",
-            url: "./group-logos/kairos-logo.webp",
-            address1: "Trinity Family Church",
-            address2: "62 Solomon Mahlangu Drive, Bluff, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Thursday",
-            email: "ronel@kairosrecovery.org",
-            coords: {
-              lat: -29.90656497221531,
-              lng: 30.985034324306994,
-            },
-            placeId:
-              "EjNTb2xvbW9uIE1haGxhbmd1IERyLCBHcm9zdmVub3IsIEJsdWZmLCBTb3V0aCBBZnJpY2EiLiosChQKEgkT0mPZzav3HhE4zVXWsChoQBIUChIJV85J3Uep9x4RbvseFrszR9Y",
-          },
-
-          {
-            title: "Cornerstone Community Church",
-            url: "./group-logos/cornerstone-logo.webp",
-            address1: "324 Longbury Drive",
-            address2: "Phoneix, Durban, South Africa",
-            startTime: "19h00",
-            endTime: "21h00",
-            day: "Thursday",
-            email: "raheel@cast.org.za",
-            coords: {
-              lat: -29.709265974215214,
-              lng: 31.007217997181606,
-            },
-            placeId: "ChIJAwsQr40E9x4R5R_CCrNGdhA",
-          },
-
-          {
-            title: "Redeemed Recovery",
-            url: "./group-logos/redeemed-logo.webp",
-            address1: "45 Trisula Avenue, Arena Park",
-            address2: "Chatsworth, South Africa",
-            startTime: "18h00",
-            endTime: "20h00",
-            day: "Thursday",
-            email: ["stanton@redeemedlife.co.za", "anthea@redeemedlife.co.za"],
-            coords: {
-              lat: -29.912661682533294,
-              lng: 30.874194909135124,
-            },
-            placeId: "ChIJZz2GFSJV9h4RW4WQ40DZxTo",
-          },
-
-          {
-            title: "IGrow - Roodewal",
-            url: "./group-logos/igrow-logo.webp",
-            address1: "Kairos Life Restoration Centre",
-            address2: " Roodewal, Bloemfontein, South Africa",
-            startTime: "10h00",
-            endTime: "12h00",
-            day: "Friday",
-            email: "igrow.rg@gmail.com",
-            coords: {
-              lat: -29.129957079921947,
-              lng: 26.316706053104873,
-            },
-            placeId:
-              "Ej4zMSBNYXJ0aW4gU3QsIFNoYW5ub24gVmFsbGV5LCBCbG9lbWZvbnRlaW4sIDkzNjQsIFNvdXRoIEFmcmljYSIwEi4KFAoSCaNyTGKbzo8eERNJ28_KxGdiEB8qFAoSCRUx1uuPzo8eETZrEtOXrJHK",
-          },
-
-          {
-            title: "Grace Bible Church",
-            url: "./group-logos/gracebible-logo.webp",
-            address1: "1478 Dlebelendlovu Street, Zone 1",
-            address2: "Pimville, Soweto, South Africa",
-            startTime: "18h00",
-            endTime: "20h00",
-            day: "Friday",
-            email: "recovery@gracebiblechurch.org.za",
-            coords: {
-              lat: -26.26198831263694,
-              lng: 27.90774926824018,
-            },
-            placeId: "ChIJAQPsg3GnlR4RPCCpJMT7250",
-          },
-
-          {
-            title: "Ramp Church International",
-            url: "./group-logos/ramp-logo.webp",
-            address1: "701 Thomas Road, Lynchburg",
-            address2: "VA, USA",
-            startTime: "18h00",
-            endTime: "19h00",
-            day: "Friday",
-            email: "soulcare@therampchurch.com",
-            coords: {
-              lat: 37.39241304660114,
-              lng: -79.18781865301504,
-            },
-            placeId: "ChIJF6r7phzasokRPliDk1hB_O0",
-          },
-
-          {
-            title: "Olive Tree Church",
-            url: "./group-logos/otc-logo.webp",
-            address1: "113 Florida Road",
-            address2: "Windermere, Durban, South Africa",
-            startTime: "18h30",
-            endTime: "20h00",
-            day: "Friday",
-            email: "gareth@projectexodus.net",
-            coords: {
-              lat: -29.83470447882349,
-              lng: 31.017628554857687,
-            },
-            placeId: "ChIJ04ZXc2QH9x4ReJtMETIA18Y",
-          },
-
-          {
-            title: "Miracle Life",
-            url: "./group-logos/miracle-life-logo.webp",
-            address1: "Plot 256 Foxdale, Zambezi Road Chamba Valley",
-            address2: "Lusaka, Zambia",
-            startTime: "18h30",
-            endTime: "20h30",
-            day: "Friday",
-            email: "isikandamc@gmail.com",
-            coords: {
-              lat: -15.346835718625776,
-              lng: 28.326657982798444,
-            },
-            placeId: "ChIJLcZ6EwA59h4RIn1WFo3Qmig",
-          },
-
-          {
-            title: "DCC, Phoenix",
-            url: "./group-logos/dcc-logo.png",
-            address1: "126 Abervale Road",
-            address2: "Rydalvale, Phoenix, Durban, South Africa",
-            startTime: "19h00",
-            endTime: "20h30",
-            day: "Friday",
-            email: "info@dcc-admin.co.za",
-            coords: {
-              lat: -29.706758150337848,
-              lng: 31.00124276834551,
-            },
-            placeId: "ChIJ_Y2YWpAE9x4RPD1tj1QE-mg",
-          },
-
-          {
-            title: "Redeemed Recovery",
-            url: "./group-logos/redeemed-logo.webp",
-            address1: "Christ the King, Shop 2/3 Suria Centre, Ghandi Nagar",
-            address2: "Umzinto, South Africa",
-            startTime: "14h00",
-            endTime: "16h00",
-            day: "Sunday",
-            email: ["stanton@redeemedlife.co.za", "anthea@redeemedlife.co.za"],
-            coords: {
-              lat: -30.286413227191044,
-              lng: 30.678780708479607,
-            },
-            placeId: "ChIJLcZ6EwA59h4RIn1WFo3Qmig",
-          },
-        ],
-
-        mapOptions: {
-          center: { lat: 0, lng: 0 },
-          gestureHandling: "cooperative",
-          fullscreenControl: true,
-          mapTypeControl: false,
-          streetViewControl: false,
-          zoom: 8,
-          zoomControl: true,
-          maxZoom: 80,
-          mapId: "b9f5280014bac665",
-        },
-
-        mapsApiKey: fetchKey(),
-        capabilities: {
-          input: true,
-          autocomplete: true,
-          directions: true,
-          distanceMatrix: true,
-          details: true,
-          actions: false,
-        },
-      };
-      console.log(CONFIGURATION.locations.length);
-      function initMap() {
-        new LocatorPlus(CONFIGURATION);
-      }
-    </script>
-
-    <script
-      id="locator-result-items-tmpl"
-      type="text/x-handlebars-template"
-      defer
-    >
-      {{#each locations}}
-        <li class="location-result" data-location-index="{{index}}">
-          <button class="select-location">
-            <h2 class="name">{{title}}</h2>
-          </button>
-          <div class="address main-address">{{address1}}<br />{{address2}}</div>
-          <div class="options">
-            <div class="option-container">
-              <button class="details-button option">
-                <span>MORE INFO</span>
-              </button>
-            </div>
-          </div>
-          {{#if travelDistanceText}}
-            <div class="distance">{{travelDistanceText}}</div>
-          {{/if}}
-          <a
-            class="directions-button"
-            href=""
-            target="_blank"
-            title="Get directions to this location on Google Maps"
-          >
-            <svg
-              width="34"
-              height="34"
-              viewBox="0 0 34 34"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M17.5867 9.24375L17.9403 8.8902V8.8902L17.5867 9.24375ZM16.4117 9.24375L16.7653 9.59731L16.7675 9.59502L16.4117 9.24375ZM8.91172 16.7437L8.55817 16.3902L8.91172 16.7437ZM8.91172 17.9229L8.55817 18.2765L8.55826 18.2766L8.91172 17.9229ZM16.4117 25.4187H16.9117V25.2116L16.7652 25.0651L16.4117 25.4187ZM16.4117 25.4229H15.9117V25.63L16.0582 25.7765L16.4117 25.4229ZM25.0909 17.9229L25.4444 18.2765L25.4467 18.2742L25.0909 17.9229ZM25.4403 16.3902L17.9403 8.8902L17.2332 9.5973L24.7332 17.0973L25.4403 16.3902ZM17.9403 8.8902C17.4213 8.3712 16.5737 8.3679 16.0559 8.89248L16.7675 9.59502C16.8914 9.4696 17.1022 9.4663 17.2332 9.5973L17.9403 8.8902ZM16.0582 8.8902L8.55817 16.3902L9.26527 17.0973L16.7653 9.5973L16.0582 8.8902ZM8.55817 16.3902C8.0379 16.9105 8.0379 17.7562 8.55817 18.2765L9.26527 17.5694C9.13553 17.4396 9.13553 17.227 9.26527 17.0973L8.55817 16.3902ZM8.55826 18.2766L16.0583 25.7724L16.7652 25.0651L9.26517 17.5693L8.55826 18.2766ZM15.9117 25.4187V25.4229H16.9117V25.4187H15.9117ZM16.0582 25.7765C16.5784 26.2967 17.4242 26.2967 17.9444 25.7765L17.2373 25.0694C17.1076 25.1991 16.895 25.1991 16.7653 25.0694L16.0582 25.7765ZM17.9444 25.7765L25.4444 18.2765L24.7373 17.5694L17.2373 25.0694L17.9444 25.7765ZM25.4467 18.2742C25.9631 17.7512 25.9663 16.9096 25.438 16.3879L24.7354 17.0995C24.8655 17.2279 24.8687 17.4363 24.7351 17.5716L25.4467 18.2742Z"
-                fill="#1967d2"
-              ></path>
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M19 19.8333V17.75H15.6667V20.25H14V16.9167C14 16.4542 14.3708 16.0833 14.8333 16.0833H19V14L21.9167 16.9167L19 19.8333Z"
-                fill="#1967d2"
-              ></path>
-              <circle
-                class="directions-button-background"
-                cx="17"
-                cy="17"
-                r="16.5"
-                stroke="#1967d2"
-              ></circle>
-            </svg>
-          </a>
-
-        </li>
-      {{/each}}
-    </script>
-    <script id="locator-details-tmpl" type="text/x-handlebars-template">
-      <button class="back-button">
-        <img
-          class="icon"
-          src="https://fonts.gstatic.com/s/i/googlematerialicons/arrow_back/v11/24px.svg"
-          alt=""
-        />
-      </button>
-      <header>
-        <div class="banner">
-          <img class="groupsLogo" src="{{location.url}}" />
-        </div>
-        <h2>{{location.title}}</h2>
-      </header>
-      <hr />
-      {{#if location.travelDistanceText}}
-        <div class="distance">{{location.travelDistanceText}} away</div>
-      {{/if}}
-      <div class="address area">
-        <p class="road">{{location.address1}}</p>
-        {{location.address2}}
-      </div>
-      <br />
-      <div class="address"><span class="start-time-bold">Day of the week:</span><br
-        />{{location.day}}</div>
-      <div class="address">
-        <span class="start-time-bold">Start Time:</span><br />
-        {{location.startTime}}
-      </div>
-      <div class="address"><span class="start-time-bold">End Time:</span><br />
-        {{location.endTime}}</div>
-
-      <!-- <div class="email">
+	<head>
+		<title>Group Locator</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/handlebars/4.7.7/handlebars.min.js"></script>
+		<link
+			href="https://fonts.googleapis.com/css?family=Roboto"
+			rel="stylesheet"
+		/>
+		<style>
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+
+			#map-container {
+				width: 100%;
+				height: 100%;
+				position: relative;
+				font-family: "Plus Jakata Sans", sans-serif;
+				box-sizing: border-box;
+			}
+
+			#map-container a {
+				text-decoration: none;
+			}
+
+			.see-on-google {
+				color: #1967d2;
+			}
+
+			#map-container button {
+				background: none;
+				color: inherit;
+				border: none;
+				padding: 0;
+				font: inherit;
+				font-size: inherit;
+				cursor: pointer;
+			}
+
+			#gmp-map {
+				position: absolute;
+				left: 25em;
+				top: 0;
+				right: 0;
+				bottom: 0;
+			}
+
+			#locations-panel {
+				position: absolute;
+				left: 0;
+				width: 25em;
+				top: 0;
+				bottom: 0;
+				overflow-y: scroll;
+				background: white;
+				padding: 0 0.5em;
+				box-sizing: border-box;
+			}
+
+			@media only screen and (max-width: 876px) {
+				#gmp-map {
+					left: 0;
+					bottom: 50%;
+				}
+
+				#locations-panel {
+					top: 50%;
+					right: 0;
+					width: unset;
+				}
+			}
+
+			#locations-panel-list > header {
+				padding: 0 1.4em 0 1.4em;
+			}
+
+			#locations-panel-list h1.search-title {
+				font-size: 1em;
+				font-weight: 500;
+				margin: 0;
+			}
+
+			#locations-panel-list h1.search-title > img {
+				vertical-align: bottom;
+				margin-top: -1em;
+			}
+
+			.search-logo {
+				width: 100px;
+				height: auto;
+			}
+
+			#search-branding-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+
+			.search-branding {
+				font-size: 2em;
+				margin-top: 1.2em;
+			}
+			#locations-panel-list .search-input {
+				width: 100%;
+				margin-top: 0.8em;
+				position: relative;
+			}
+
+			#locations-panel-list .search-input input {
+				width: 100%;
+				border: 1px solid rgba(0, 0, 0, 0.2);
+				border-radius: 0.3em;
+				height: 2.2em;
+				box-sizing: border-box;
+				padding: 0 2.5em 0 1em;
+				font-size: 1em;
+			}
+
+			#locations-panel-list .search-input-overlay {
+				position: absolute;
+			}
+
+			#locations-panel-list .search-input-overlay.search {
+				right: 2px;
+				top: 2px;
+				bottom: 2px;
+				width: 2.4em;
+			}
+
+			#locations-panel-list .search-input-overlay.search button {
+				width: 100%;
+				height: 100%;
+				border-radius: 0.2em;
+				color: black;
+				background: transparent;
+			}
+
+			#locations-panel-list .search-input-overlay.search .icon {
+				margin-top: 0.05em;
+				vertical-align: top;
+			}
+
+			#locations-panel-list .section-name {
+				font-weight: 500;
+				font-size: 0.9em;
+				margin: 1.8em 0 1em 1.5em;
+			}
+
+			#locations-panel-list .location-result {
+				position: relative;
+				padding: 0.8em 3.5em 0.8em 1.4em;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+				cursor: pointer;
+			}
+			#locations-panel-list .location-result:hover {
+				background-color: #1e8fff1a;
+			}
+
+			#locations-panel-list .location-result:first-of-type {
+				border-top: 1px solid rgba(0, 0, 0, 0.12);
+			}
+
+			#locations-panel-list .location-result:last-of-type {
+				border-bottom: none;
+			}
+
+			#locations-panel-list .location-result.selected {
+				outline: 2px solid #1e90ff;
+			}
+
+			#locations-panel-list button.select-location {
+				margin-bottom: 0.6em;
+				text-align: left;
+			}
+
+			#locations-panel-list .location-result h2.name {
+				font-size: 1.2rem;
+				font-weight: 800;
+				margin: 0;
+				padding-right: 0.9em;
+			}
+
+			#locations-panel-list .location-result .address {
+				font-size: 0.9em;
+				margin-bottom: 0.5em;
+				padding-right: 0.9em;
+				line-height: 1.5em;
+			}
+
+			#locations-panel-list .directions-button {
+				position: absolute;
+				right: 1.2em;
+				top: 2.3em;
+			}
+
+			#locations-panel-list .directions-button-background:hover {
+				fill: rgba(116, 120, 127, 0.1);
+			}
+
+			#locations-panel-list .directions-button-background {
+				fill: rgba(255, 255, 255, 0.01);
+			}
+
+			#locations-panel-list .location-result .distance {
+				position: absolute;
+				top: 0.9em;
+				right: 0.9em;
+				text-align: center;
+				font-size: 0.9em;
+				width: 5em;
+			}
+
+			#locations-panel-list .option-container {
+				display: inline-block;
+				margin: 0.2em 0;
+				position: relative;
+			}
+
+			#locations-panel-list .option-container button:hover,
+			#locations-panel-list .option-container a:hover {
+				background-color: #ffffff;
+				color: #1e90ff;
+			}
+
+			#locations-panel-list .option {
+				border: 1px solid #1e90ff;
+				border-radius: 0.2rem;
+				color: #ffffff;
+				font-size: 0.7rem;
+				font-weight: 300;
+				padding: 0.3em 0;
+				background-color: #1e90ff;
+			}
+
+			#locations-panel-list .option > span {
+				margin: 0 0.9em;
+			}
+
+			#location-results-list {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.email {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 2em 0;
+			}
+
+			.email-btn {
+				border: 1px #1e90ff solid;
+				color: #fff;
+				padding: 0.3em 1.2em;
+				background-color: #1e90ff;
+				border-radius: 0.2rem;
+				width: 33.3%;
+				text-align: center;
+			}
+			.email-btn:hover {
+				background-color: #fff;
+				color: #1e90ff;
+			}
+
+			/* ------------- DETAILS PANEL ------------------------------- */
+			#locations-panel-details {
+				padding: 1.5em 1.5em;
+				box-sizing: border-box;
+				display: none;
+			}
+
+			#locations-panel-details .back-button {
+				font-size: 1em;
+				font-weight: 500;
+				color: #1967d2;
+				display: block;
+				text-decoration: none;
+				background: none;
+				border: none;
+				cursor: pointer;
+				padding: 0;
+				font-family: inherit;
+			}
+
+			#locations-panel-details .back-button .icon {
+				width: 20px;
+				height: 20px;
+				vertical-align: bottom;
+
+				/* Match link color #1967d2 */
+				fill: black;
+			}
+
+			#locations-panel-details > header {
+				text-align: center;
+				/* width: 100px; */
+			}
+
+			#locations-panel-details .banner {
+				margin-top: 1em;
+			}
+
+			#locations-panel-details h2 {
+				font-size: 1.5;
+				font-weight: bold;
+				margin-bottom: 0.3em;
+			}
+
+			#locations-panel-details .distance {
+				font-size: 0.9em;
+				text-align: center;
+			}
+
+			#locations-panel-details .address {
+				text-align: center;
+				font-size: 0.9em;
+				margin-top: 1em;
+				border-radius: 0.5em;
+				border-color: black;
+				display: flex;
+				flex-direction: column;
+				padding: 1em;
+				border: 1px solid;
+			}
+
+			#locations-panel-details .address .start-time-bold {
+				font-weight: bold;
+				margin-bottom: -0.75em;
+			}
+
+			.groupsLogo {
+				margin-top: -1em;
+				width: 100px;
+				height: auto;
+			}
+			#locations-panel-details .atmosphere {
+				text-align: center;
+				font-size: 0.9em;
+				margin: 2em 0;
+			}
+
+			#locations-panel-details .star-rating-numeric {
+				color: #555;
+			}
+
+			#locations-panel-details .star-icon {
+				width: 1.2em;
+				height: 1.2em;
+				margin-right: -0.3em;
+				margin-top: -0.08em;
+				vertical-align: top;
+				filter: invert(88%) sepia(60%) saturate(2073%) hue-rotate(318deg)
+					brightness(93%) contrast(104%);
+			}
+
+			#locations-panel-details .star-icon:last-of-type {
+				margin-right: 0.2em;
+			}
+
+			#locations-panel-details .price-dollars {
+				color: #555;
+			}
+
+			#locations-panel-details hr {
+				height: 1px;
+				color: rgba(0, 0, 0, 0.12);
+				background-color: rgba(0, 0, 0, 0.12);
+				border: none;
+				margin-bottom: 1em;
+			}
+
+			#locations-panel-details .contact {
+				font-size: 0.9em;
+				margin: 0.8em 0;
+				display: flex;
+				align-items: center;
+			}
+
+			#locations-panel-details .contact .icon {
+				flex: 0 0 auto;
+				width: 1.5em;
+				height: 1.5em;
+			}
+
+			#locations-panel-details .contact .right {
+				padding: 0.1em 0 0 1em;
+			}
+
+			#locations-panel-details .hours .weekday {
+				display: inline-block;
+				width: 5em;
+			}
+
+			#locations-panel-details .website a {
+				white-space: nowrap;
+				display: inline-block;
+				overflow: hidden;
+				max-width: 16em;
+				text-overflow: ellipsis;
+			}
+
+			#locations-panel-details p.attribution {
+				color: #777;
+				margin: 0;
+				font-size: 0.8em;
+				font-style: italic;
+			}
+
+			.send-email-btn {
+				border: 1px solid #2370ce;
+				border-radius: 0.9em;
+				color: #000000;
+				font-size: 0.9em;
+				font-weight: 500;
+				padding: 0.3em 0.81em;
+			}
+
+			.area {
+				margin-bottom: -1.1em;
+			}
+
+			.road {
+				margin-bottom: 0.4em;
+				margin-top: 0;
+			}
+		</style>
+		<script defer>
+			"use strict";
+
+			/** Hide a DOM element. */
+			function hideElement(el) {
+				el.style.display = "none";
+			}
+
+			/** Show a DOM element that has been hidden. */
+			function showElement(el) {
+				el.style.display = "block";
+			}
+
+			/** Helper function to generate a Google Maps directions URL */
+			function generateDirectionsURL(origin, destination) {
+				const googleMapsUrlBase = "https://www.google.com/maps/dir/?";
+				const searchParams = new URLSearchParams("api=1");
+				searchParams.append("origin", origin);
+				const destinationParam = [];
+				// Add title to destinationParam except in cases where Quick Builder set
+				// the title to the first line of the address
+				if (destination.title !== destination.address1) {
+					destinationParam.push(destination.title);
+				}
+				destinationParam.push(destination.address1, destination.address2);
+				searchParams.append("destination", destinationParam.join(","));
+				return googleMapsUrlBase + searchParams.toString();
+			}
+
+			/**
+			 * Defines an instance of the Locator+ solution, to be instantiated
+			 * when the Maps library is loaded.
+			 */
+			function LocatorPlus(configuration) {
+				const locator = this;
+
+				locator.locations = configuration.locations || [];
+				locator.capabilities = configuration.capabilities || {};
+
+				const mapEl = document.getElementById("gmp-map");
+				const panelEl = document.getElementById("locations-panel");
+				locator.panelListEl = document.getElementById("locations-panel-list");
+				const sectionNameEl = document.getElementById(
+					"location-results-section-name"
+				);
+				const resultsContainerEl = document.getElementById(
+					"location-results-list"
+				);
+
+				const itemsTemplate = Handlebars.compile(
+					document.getElementById("locator-result-items-tmpl").innerHTML
+				);
+
+				locator.searchLocation = null;
+				locator.searchLocationMarker = null;
+				locator.selectedLocationIdx = null;
+				locator.userCountry = null;
+
+				// Initialize the map -------------------------------------------------------
+				locator.map = new google.maps.Map(mapEl, configuration.mapOptions);
+
+				// Store selection.
+				const selectResultItem = function (
+					locationIdx,
+					panToMarker,
+					scrollToResult
+				) {
+					locator.selectedLocationIdx = locationIdx;
+					for (let locationElem of resultsContainerEl.children) {
+						locationElem.classList.remove("selected");
+						if (getResultIndex(locationElem) === locator.selectedLocationIdx) {
+							locationElem.classList.add("selected");
+							if (scrollToResult) {
+								panelEl.scrollTop = locationElem.offsetTop;
+							}
+						}
+					}
+					if (panToMarker && locationIdx != null) {
+						locator.map.panTo(locator.locations[locationIdx].coords);
+						locator.map.setZoom(18);
+						locator.map.setTilt(45);
+					}
+				};
+
+				// Create a marker for each location.
+				const markers = locator.locations.map(function (location, index) {
+					const mark = "./ProjectExodusCircle.svg";
+					const marker = new google.maps.Marker({
+						position: location.coords,
+						map: locator.map,
+						title: location.title,
+						icon: mark,
+						optimized: true,
+						scaledSize: new google.maps.Size(25, 25),
+					});
+					marker.addListener("click", function () {
+						selectResultItem(index, true, true);
+					});
+					return marker;
+				});
+
+				function toggleBounce() {
+					if (marker.getAnimation() !== null) {
+						marker.setAnimation(null);
+					} else {
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+					}
+				}
+
+				// Fit map to marker bounds.
+				locator.updateBounds = function () {
+					const bounds = new google.maps.LatLngBounds();
+					if (locator.searchLocationMarker) {
+						bounds.extend(locator.searchLocationMarker.getPosition());
+					}
+					for (let i = 0; i < markers.length; i++) {
+						bounds.extend(markers[i].getPosition());
+					}
+					locator.map.fitBounds(bounds);
+				};
+				if (locator.locations.length) {
+					locator.updateBounds();
+				}
+
+				// Get the distance of a store location to the user's location,
+				// used in sorting the list.
+				const getLocationDistance = function (location) {
+					if (!locator.searchLocation) return null;
+
+					// Use travel distance if available (from Distance Matrix).
+					if (location.travelDistanceValue != null) {
+						return location.travelDistanceValue;
+					}
+
+					// Fall back to straight-line distance.
+					return google.maps.geometry.spherical.computeDistanceBetween(
+						new google.maps.LatLng(location.coords),
+						locator.searchLocation.location
+					);
+				};
+
+				// Render the results list --------------------------------------------------
+
+				// When the results list re-renders, always update directions on the
+				// first selection event.
+				let updateDirectionsOnSelect;
+
+				const getResultIndex = function (elem) {
+					return parseInt(elem.getAttribute("data-location-index"));
+				};
+
+				locator.renderResultsList = function () {
+					let locations = locator.locations.slice();
+					for (let i = 0; i < locations.length; i++) {
+						locations[i].index = i;
+					}
+					if (locator.searchLocation) {
+						sectionNameEl.textContent =
+							"Nearest locations (" + locations.length + ")";
+						locations.sort(function (a, b) {
+							return getLocationDistance(a) - getLocationDistance(b);
+						});
+					} else {
+						sectionNameEl.textContent = `All locations (${locations.length})`;
+					}
+					const resultItemContext = { locations: locations };
+					resultsContainerEl.innerHTML = itemsTemplate(resultItemContext);
+					updateDirectionsOnSelect = true;
+					for (let item of resultsContainerEl.children) {
+						const resultIndex = getResultIndex(item);
+						if (resultIndex === locator.selectedLocationIdx) {
+							item.classList.add("selected");
+						}
+
+						const resultSelectionHandler = function () {
+							if (
+								resultIndex !== locator.selectedLocationIdx ||
+								updateDirectionsOnSelect
+							) {
+								selectResultItem(resultIndex, true, false);
+								locator.updateDirections();
+								updateDirectionsOnSelect = false;
+							}
+						};
+
+						// Clicking anywhere on the item selects this location.
+						// Additionally, create a button element to make this behavior
+						// accessible under tab navigation.
+						item.addEventListener("click", resultSelectionHandler);
+						item
+							.querySelector(".select-location")
+							.addEventListener("click", function (e) {
+								resultSelectionHandler();
+								e.stopPropagation();
+							});
+
+						item
+							.querySelector(".details-button")
+							.addEventListener("click", function () {
+								locator.showDetails(resultIndex);
+							});
+
+						// Clicking the directions button will open Google Maps directions in a
+						// new tab
+						const origin =
+							locator.searchLocation != null
+								? locator.searchLocation.location
+								: "";
+						const destination = locator.locations[resultIndex];
+						const googleMapsUrl = generateDirectionsURL(origin, destination);
+						item
+							.querySelector(".directions-button")
+							.setAttribute("href", googleMapsUrl);
+					}
+				};
+
+				// Optional capability initialization --------------------------------------
+				initializeSearchInput(locator);
+				initializeDistanceMatrix(locator);
+				initializeDirections(locator);
+				initializeDetails(locator);
+
+				// Initial render of results -----------------------------------------------
+				locator.renderResultsList();
+			}
+
+			/** When the search input capability is enabled, initialize it. */
+			function initializeSearchInput(locator) {
+				const geocodeCache = new Map();
+				const geocoder = new google.maps.Geocoder();
+
+				const searchInputEl = document.getElementById("location-search-input");
+				const searchButtonEl = document.getElementById(
+					"location-search-button"
+				);
+
+				const updateSearchLocation = function (address, location) {
+					if (locator.searchLocationMarker) {
+						locator.searchLocationMarker.setMap(null);
+					}
+					if (!location) {
+						locator.searchLocation = null;
+						return;
+					}
+					locator.searchLocation = {
+						address: address,
+						location: location,
+					};
+					locator.searchLocationMarker = new google.maps.Marker({
+						position: location,
+						map: locator.map,
+						title: "My location",
+						icon: {
+							path: google.maps.SymbolPath.CIRCLE,
+							scale: 12,
+							fillColor: "#3367D6",
+							fillOpacity: 0.5,
+							strokeOpacity: 0,
+						},
+					});
+
+					// Update the locator's idea of the user's country, used for units. Use
+					// `formatted_address` instead of the more structured `address_components`
+					// to avoid an additional billed call.
+					const addressParts = address.split(" ");
+					locator.userCountry = addressParts[addressParts.length - 1];
+
+					// Update map bounds to include the new location marker.
+					locator.updateBounds();
+
+					// Update the result list so we can sort it by proximity.
+					locator.renderResultsList();
+
+					locator.updateTravelTimes();
+
+					locator.clearDirections();
+				};
+
+				const geocodeSearch = function (query) {
+					if (!query) {
+						return;
+					}
+
+					const handleResult = function (geocodeResult) {
+						searchInputEl.value = geocodeResult.formatted_address;
+						updateSearchLocation(
+							geocodeResult.formatted_address,
+							geocodeResult.geometry.location
+						);
+					};
+
+					if (geocodeCache.has(query)) {
+						handleResult(geocodeCache.get(query));
+						return;
+					}
+					const request = {
+						address: query,
+						bounds: locator.map.getBounds(),
+					};
+					geocoder.geocode(request, function (results, status) {
+						if (status === "OK") {
+							if (results.length > 0) {
+								const result = results[0];
+								geocodeCache.set(query, result);
+								handleResult(result);
+							}
+						}
+					});
+				};
+
+				// Set up geocoding on the search input.
+				searchButtonEl.addEventListener("click", function () {
+					geocodeSearch(searchInputEl.value.trim());
+				});
+
+				// Initialize Autocomplete.
+				initializeSearchInputAutocomplete(
+					locator,
+					searchInputEl,
+					geocodeSearch,
+					updateSearchLocation
+				);
+			}
+
+			/** Add Autocomplete to the search input. */
+			function initializeSearchInputAutocomplete(
+				locator,
+				searchInputEl,
+				fallbackSearch,
+				searchLocationUpdater
+			) {
+				// Set up Autocomplete on the search input. Bias results to map viewport.
+				const autocomplete = new google.maps.places.Autocomplete(
+					searchInputEl,
+					{
+						types: ["geocode"],
+						fields: ["place_id", "formatted_address", "geometry.location"],
+					}
+				);
+				autocomplete.bindTo("bounds", locator.map);
+				autocomplete.addListener("place_changed", function () {
+					const placeResult = autocomplete.getPlace();
+					if (!placeResult.geometry) {
+						// Hitting 'Enter' without selecting a suggestion will result in a
+						// placeResult with only the text input value as the 'name' field.
+						fallbackSearch(placeResult.name);
+						return;
+					}
+					searchLocationUpdater(
+						placeResult.formatted_address,
+						placeResult.geometry.location
+					);
+				});
+			}
+
+			/** Initialize Distance Matrix for the locator. */
+			function initializeDistanceMatrix(locator) {
+				const distanceMatrixService = new google.maps.DistanceMatrixService();
+
+				// Annotate travel times to the selected location using Distance Matrix.
+				locator.updateTravelTimes = function () {
+					if (!locator.searchLocation) return;
+
+					const units =
+						locator.userCountry === "USA"
+							? google.maps.UnitSystem.IMPERIAL
+							: google.maps.UnitSystem.METRIC;
+					const request = {
+						origins: [locator.searchLocation.location],
+						destinations: locator.locations.map(function (x) {
+							return x.coords;
+						}),
+						travelMode: google.maps.TravelMode.DRIVING,
+						unitSystem: units,
+					};
+					const callback = function (response, status) {
+						if (status === "OK") {
+							const distances = response.rows[0].elements;
+							for (let i = 0; i < distances.length; i++) {
+								const distResult = distances[i];
+								let travelDistanceText, travelDistanceValue;
+								if (distResult.status === "OK") {
+									travelDistanceText = distResult.distance.text;
+									travelDistanceValue = distResult.distance.value;
+								}
+								const location = locator.locations[i];
+								location.travelDistanceText = travelDistanceText;
+								location.travelDistanceValue = travelDistanceValue;
+							}
+
+							// Re-render the results list, in case the ordering has changed.
+							locator.renderResultsList();
+						}
+					};
+					distanceMatrixService.getDistanceMatrix(request, callback);
+				};
+			}
+
+			/** Initialize Directions service for the locator. */
+			function initializeDirections(locator) {
+				const directionsCache = new Map();
+				const directionsService = new google.maps.DirectionsService();
+				const directionsRenderer = new google.maps.DirectionsRenderer({
+					suppressMarkers: true,
+				});
+				locator.updateDirections = function () {
+					if (!locator.searchLocation || locator.selectedLocationIdx == null) {
+						return;
+					}
+					const cacheKey = JSON.stringify([
+						locator.searchLocation.location,
+						locator.selectedLocationIdx,
+					]);
+					if (directionsCache.has(cacheKey)) {
+						const directions = directionsCache.get(cacheKey);
+						directionsRenderer.setMap(locator.map);
+						directionsRenderer.setDirections(directions);
+						return;
+					}
+					const request = {
+						origin: locator.searchLocation.location,
+						destination: locator.locations[locator.selectedLocationIdx].coords,
+						travelMode: google.maps.TravelMode.DRIVING,
+					};
+					directionsService.route(request, function (response, status) {
+						if (status === "OK") {
+							directionsRenderer.setMap(locator.map);
+							directionsRenderer.setDirections(response);
+							directionsCache.set(cacheKey, response);
+						}
+					});
+				};
+
+				locator.clearDirections = function () {
+					directionsRenderer.setMap(null);
+				};
+			}
+
+			/** Initialize Place Details service and UI for the locator. */
+			function initializeDetails(locator) {
+				const panelDetailsEl = document.getElementById(
+					"locations-panel-details"
+				);
+				const detailsService = new google.maps.places.PlacesService(
+					locator.map
+				);
+
+				const detailsTemplate = Handlebars.compile(
+					document.getElementById("locator-details-tmpl").innerHTML
+				);
+
+				const renderDetails = function (context) {
+					panelDetailsEl.innerHTML = detailsTemplate(context);
+					panelDetailsEl
+						.querySelector(".back-button")
+						.addEventListener("click", hideDetails);
+				};
+
+				const hideDetails = function () {
+					showElement(locator.panelListEl);
+					hideElement(panelDetailsEl);
+				};
+
+				locator.showDetails = function (locationIndex) {
+					const location = locator.locations[locationIndex];
+					const context = { location };
+
+					// Helper function to create a fixed-size array.
+					const initArray = function (arraySize) {
+						const array = [];
+						while (array.length < arraySize) {
+							array.push(0);
+						}
+						return array;
+					};
+
+					if (location.placeId) {
+						const request = {
+							placeId: location.placeId,
+							fields: [
+								"formatted_phone_number",
+								"website",
+								"opening_hours",
+								"url",
+								"utc_offset_minutes",
+								"price_level",
+								"rating",
+								"user_ratings_total",
+							],
+						};
+						detailsService.getDetails(request, function (place, status) {
+							if (status == google.maps.places.PlacesServiceStatus.OK) {
+								if (place.opening_hours) {
+									const daysHours = place.opening_hours.weekday_text
+										.map((e) => e.split(/\:\s+/))
+										.map((e) => ({
+											days: e[0].substr(0, 3),
+											hours: e[1],
+										}));
+
+									for (let i = 1; i < daysHours.length; i++) {
+										if (daysHours[i - 1].hours === daysHours[i].hours) {
+											if (daysHours[i - 1].days.indexOf("-") !== -1) {
+												daysHours[i - 1].days = daysHours[i - 1].days.replace(
+													/\w+$/,
+													daysHours[i].days
+												);
+											} else {
+												daysHours[i - 1].days += " - " + daysHours[i].days;
+											}
+											daysHours.splice(i--, 1);
+										}
+									}
+									place.openingHoursSummary = daysHours;
+								}
+								if (place.rating) {
+									const starsOutOfTen = Math.round(2 * place.rating);
+									const fullStars = Math.floor(starsOutOfTen / 2);
+									const halfStars = fullStars !== starsOutOfTen / 2 ? 1 : 0;
+									const emptyStars = 5 - fullStars - halfStars;
+
+									// Express stars as arrays to make iterating in Handlebars easy.
+									place.fullStarIcons = initArray(fullStars);
+									place.halfStarIcons = initArray(halfStars);
+									place.emptyStarIcons = initArray(emptyStars);
+								}
+								if (place.price_level) {
+									place.dollarSigns = initArray(place.price_level);
+								}
+								if (place.website) {
+									const url = new URL(place.website);
+									place.websiteDomain = url.hostname;
+								}
+
+								context.place = place;
+								renderDetails(context);
+							}
+						});
+					}
+					renderDetails(context);
+					hideElement(locator.panelListEl);
+					showElement(panelDetailsEl);
+				};
+			}
+		</script>
+
+		<script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
+		<!-- Config.js -->
+
+		<script defer>
+			"use strict";
+			let apiKey;
+			const fetchKey = () => {
+				fetch("http://127.0.0.1:5501/api.json")
+					.then((response) => response.json())
+					.then((data) => {
+						apiKey = data.api;
+						getApiKey(apiKey);
+					})
+					.catch((err) => console.error(err));
+			};
+
+			const getApiKey = (data) => {
+				console.log(data);
+				return data;
+			};
+
+			fetchKey();
+
+			const fetchData = async () => {
+				const response = await fetch("groupData.json");
+				const data = await response.json();
+				return data;
+			};
+
+			fetchData()
+				.then((locations) => {
+					const CONFIGURATION = {
+						locations,
+						mapOptions: {
+							center: { lat: 0, lng: 0 },
+							gestureHandling: "cooperative",
+							fullscreenControl: true,
+							mapTypeControl: false,
+							streetViewControl: false,
+							zoom: 8,
+							zoomControl: true,
+							maxZoom: 80,
+							mapId: "b9f5280014bac665",
+						},
+						mapsApiKey: fetchKey(),
+						capabilities: {
+							input: true,
+							autocomplete: true,
+							directions: true,
+							distanceMatrix: true,
+							details: true,
+							actions: false,
+						},
+					};
+
+					function initMap() {
+						new LocatorPlus(CONFIGURATION);
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching data:", error);
+				});
+		</script>
+
+		<script
+			id="locator-result-items-tmpl"
+			type="text/x-handlebars-template"
+			defer
+		>
+			{{#each locations}}
+				<li class="location-result" data-location-index="{{index}}">
+					<button class="select-location">
+						<h2 class="name">{{title}}</h2>
+					</button>
+					<div class="address main-address">{{address1}}<br />{{address2}}</div>
+					<div class="options">
+						<div class="option-container">
+							<button class="details-button option">
+								<span>MORE INFO</span>
+							</button>
+						</div>
+					</div>
+					{{#if travelDistanceText}}
+						<div class="distance">{{travelDistanceText}}</div>
+					{{/if}}
+					<a
+						class="directions-button"
+						href=""
+						target="_blank"
+						title="Get directions to this location on Google Maps"
+					>
+						<svg
+							width="34"
+							height="34"
+							viewBox="0 0 34 34"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M17.5867 9.24375L17.9403 8.8902V8.8902L17.5867 9.24375ZM16.4117 9.24375L16.7653 9.59731L16.7675 9.59502L16.4117 9.24375ZM8.91172 16.7437L8.55817 16.3902L8.91172 16.7437ZM8.91172 17.9229L8.55817 18.2765L8.55826 18.2766L8.91172 17.9229ZM16.4117 25.4187H16.9117V25.2116L16.7652 25.0651L16.4117 25.4187ZM16.4117 25.4229H15.9117V25.63L16.0582 25.7765L16.4117 25.4229ZM25.0909 17.9229L25.4444 18.2765L25.4467 18.2742L25.0909 17.9229ZM25.4403 16.3902L17.9403 8.8902L17.2332 9.5973L24.7332 17.0973L25.4403 16.3902ZM17.9403 8.8902C17.4213 8.3712 16.5737 8.3679 16.0559 8.89248L16.7675 9.59502C16.8914 9.4696 17.1022 9.4663 17.2332 9.5973L17.9403 8.8902ZM16.0582 8.8902L8.55817 16.3902L9.26527 17.0973L16.7653 9.5973L16.0582 8.8902ZM8.55817 16.3902C8.0379 16.9105 8.0379 17.7562 8.55817 18.2765L9.26527 17.5694C9.13553 17.4396 9.13553 17.227 9.26527 17.0973L8.55817 16.3902ZM8.55826 18.2766L16.0583 25.7724L16.7652 25.0651L9.26517 17.5693L8.55826 18.2766ZM15.9117 25.4187V25.4229H16.9117V25.4187H15.9117ZM16.0582 25.7765C16.5784 26.2967 17.4242 26.2967 17.9444 25.7765L17.2373 25.0694C17.1076 25.1991 16.895 25.1991 16.7653 25.0694L16.0582 25.7765ZM17.9444 25.7765L25.4444 18.2765L24.7373 17.5694L17.2373 25.0694L17.9444 25.7765ZM25.4467 18.2742C25.9631 17.7512 25.9663 16.9096 25.438 16.3879L24.7354 17.0995C24.8655 17.2279 24.8687 17.4363 24.7351 17.5716L25.4467 18.2742Z"
+								fill="#1967d2"
+							></path>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M19 19.8333V17.75H15.6667V20.25H14V16.9167C14 16.4542 14.3708 16.0833 14.8333 16.0833H19V14L21.9167 16.9167L19 19.8333Z"
+								fill="#1967d2"
+							></path>
+							<circle
+								class="directions-button-background"
+								cx="17"
+								cy="17"
+								r="16.5"
+								stroke="#1967d2"
+							></circle>
+						</svg>
+					</a>
+
+				</li>
+			{{/each}}
+		</script>
+		<script id="locator-details-tmpl" type="text/x-handlebars-template">
+			<button class="back-button">
+				<img
+					class="icon"
+					src="https://fonts.gstatic.com/s/i/googlematerialicons/arrow_back/v11/24px.svg"
+					alt=""
+				/>
+			</button>
+			<header>
+				<div class="banner">
+					<img class="groupsLogo" src="{{location.url}}" />
+				</div>
+				<h2>{{location.title}}</h2>
+			</header>
+			<hr />
+			{{#if location.travelDistanceText}}
+				<div class="distance">{{location.travelDistanceText}} away</div>
+			{{/if}}
+			<div class="address area">
+				<p class="road">{{location.address1}}</p>
+				{{location.address2}}
+			</div>
+			<br />
+			<div class="address"><span class="start-time-bold">Day of the week:</span><br
+				/>{{location.day}}</div>
+			<div class="address">
+				<span class="start-time-bold">Start Time:</span><br />
+				{{location.startTime}}
+			</div>
+			<div class="address"><span class="start-time-bold">End Time:</span><br />
+				{{location.endTime}}</div>
+
+			<!-- <div class="email">
       <a href="mailto: {{location.email}}" class="email-btn">Email</a>
       </div> -->
 
-      <div class="atmosphere">
-        {{#if place.rating}}
-          <span class="star-rating-numeric">{{place.rating}}</span>
-          <span>
-            {{#each place.fullStarIcons}}
-              <img
-                src="https://fonts.gstatic.com/s/i/googlematerialicons/star/v15/24px.svg"
-                alt=""
-                class="star-icon"
-              />
-            {{/each}}
-            {{#each place.halfStarIcons}}
-              <img
-                src="https://fonts.gstatic.com/s/i/googlematerialicons/star_half/v17/24px.svg"
-                alt=""
-                class="star-icon"
-              />
-            {{/each}}
-            {{#each place.emptyStarIcons}}
-              <img
-                src="https://fonts.gstatic.com/s/i/googlematerialicons/star_outline/v9/24px.svg"
-                alt=""
-                class="star-icon"
-              />
-            {{/each}}
-          </span>
-        {{/if}}
-        {{#if place.user_ratings_total}}
-          <a href="{{place.url}}" target="_blank">{{place.user_ratings_total}}
-            reviews</a>
-        {{else}}
-          <a href="{{place.url}}" target="_blank" class="see-on-google">See on
-            Google Maps</a>
-        {{/if}}
+			<div class="atmosphere">
+				{{#if place.rating}}
+					<span class="star-rating-numeric">{{place.rating}}</span>
+					<span>
+						{{#each place.fullStarIcons}}
+							<img
+								src="https://fonts.gstatic.com/s/i/googlematerialicons/star/v15/24px.svg"
+								alt=""
+								class="star-icon"
+							/>
+						{{/each}}
+						{{#each place.halfStarIcons}}
+							<img
+								src="https://fonts.gstatic.com/s/i/googlematerialicons/star_half/v17/24px.svg"
+								alt=""
+								class="star-icon"
+							/>
+						{{/each}}
+						{{#each place.emptyStarIcons}}
+							<img
+								src="https://fonts.gstatic.com/s/i/googlematerialicons/star_outline/v9/24px.svg"
+								alt=""
+								class="star-icon"
+							/>
+						{{/each}}
+					</span>
+				{{/if}}
+				{{#if place.user_ratings_total}}
+					<a href="{{place.url}}" target="_blank">{{place.user_ratings_total}}
+						reviews</a>
+				{{else}}
+					<a href="{{place.url}}" target="_blank" class="see-on-google">See on
+						Google Maps</a>
+				{{/if}}
 
-        {{#if place.price_level}}
-          &bull;
-          <span class="price-dollars">
-            {{#each place.dollarSigns}}${{/each}}
-          </span>
-        {{/if}}
-      </div>
-      {{#if place.opening_hours}}
-        <div class="hours contact">
-          <img
-            src="https://fonts.gstatic.com/s/i/googlematerialicons/schedule/v12/24px.svg"
-            alt="Opening hours"
-            class="icon"
-          />
-          <div class="right">
-            {{#each place.openingHoursSummary}}
-              <div>
-                <span class="weekday">{{days}}</span>
-                <span class="hours">{{hours}}</span>
-              </div>
-            {{/each}}
-          </div>
-        </div>
-      {{/if}}
-      {{#if place.website}}
-        <div class="website contact">
-          <img
-            src="https://fonts.gstatic.com/s/i/googlematerialicons/public/v10/24px.svg"
-            alt="Website"
-            class="icon"
-          />
-          <div class="right">
-            <a
-              href="{{place.website}}"
-              target="_blank"
-            >{{place.websiteDomain}}</a>
-          </div>
-        </div>
-      {{/if}}
-      {{#if place.formatted_phone_number}}
-        <div class="phone contact">
-          <img
-            src="https://fonts.gstatic.com/s/i/googlematerialicons/phone/v10/24px.svg"
-            alt="Phone number"
-            class="icon"
-          />
-          <div class="right">
-            {{place.formatted_phone_number}}
-          </div>
-        </div>
-      {{/if}}
-      {{#if place.html_attributions}}
-        {{#each place.html_attributions}}
-          <p class="attribution">{{{this}}}</p>
-        {{/each}}
-      {{/if}}
-    </script>
-  </head>
-  <body>
-    <div id="map-container">
-      <div id="locations-panel">
-        <div id="locations-panel-list">
-          <header>
-            <div id="search-branding-container">
-              <img class="search-logo" src="./pex-logo-black.webp" />
-              <h1 class="search-branding">Find a recovery group near you</h1>
-            </div>
-            <div class="search-input">
-              <input
-                id="location-search-input"
-                placeholder="Enter your address or zip code"
-              />
-              <div
-                id="search-overlay-search"
-                class="search-input-overlay search"
-              >
-                <button id="location-search-button">
-                  <img
-                    class="icon"
-                    src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v11/24px.svg"
-                    alt="Search"
-                  />
-                </button>
-              </div>
-            </div>
-          </header>
-          <div class="section-name" id="location-results-section-name">
-            All Groups
-          </div>
-          <div class="results">
-            <ul id="location-results-list"></ul>
-          </div>
-        </div>
-        <div id="locations-panel-details"></div>
-      </div>
-      <div id="gmp-map"></div>
-    </div>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABCDE"
-      async
-      defer
-    ></script>
-  </body>
+				{{#if place.price_level}}
+					&bull;
+					<span class="price-dollars">
+						{{#each place.dollarSigns}}${{/each}}
+					</span>
+				{{/if}}
+			</div>
+			{{#if place.opening_hours}}
+				<div class="hours contact">
+					<img
+						src="https://fonts.gstatic.com/s/i/googlematerialicons/schedule/v12/24px.svg"
+						alt="Opening hours"
+						class="icon"
+					/>
+					<div class="right">
+						{{#each place.openingHoursSummary}}
+							<div>
+								<span class="weekday">{{days}}</span>
+								<span class="hours">{{hours}}</span>
+							</div>
+						{{/each}}
+					</div>
+				</div>
+			{{/if}}
+			{{#if place.website}}
+				<div class="website contact">
+					<img
+						src="https://fonts.gstatic.com/s/i/googlematerialicons/public/v10/24px.svg"
+						alt="Website"
+						class="icon"
+					/>
+					<div class="right">
+						<a
+							href="{{place.website}}"
+							target="_blank"
+						>{{place.websiteDomain}}</a>
+					</div>
+				</div>
+			{{/if}}
+			{{#if place.formatted_phone_number}}
+				<div class="phone contact">
+					<img
+						src="https://fonts.gstatic.com/s/i/googlematerialicons/phone/v10/24px.svg"
+						alt="Phone number"
+						class="icon"
+					/>
+					<div class="right">
+						{{place.formatted_phone_number}}
+					</div>
+				</div>
+			{{/if}}
+			{{#if place.html_attributions}}
+				{{#each place.html_attributions}}
+					<p class="attribution">{{{this}}}</p>
+				{{/each}}
+			{{/if}}
+		</script>
+	</head>
+	<body>
+		<div id="map-container">
+			<div id="locations-panel">
+				<div id="locations-panel-list">
+					<header>
+						<div id="search-branding-container">
+							<img class="search-logo" src="./pex-logo-black.webp" />
+							<h1 class="search-branding">Find a recovery group near you</h1>
+						</div>
+						<div class="search-input">
+							<input
+								id="location-search-input"
+								placeholder="Enter your address or zip code"
+							/>
+							<div
+								id="search-overlay-search"
+								class="search-input-overlay search"
+							>
+								<button id="location-search-button">
+									<img
+										class="icon"
+										src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v11/24px.svg"
+										alt="Search"
+									/>
+								</button>
+							</div>
+						</div>
+					</header>
+					<div class="section-name" id="location-results-section-name">
+						All Groups
+					</div>
+					<div class="results">
+						<ul id="location-results-list"></ul>
+					</div>
+				</div>
+				<div id="locations-panel-details"></div>
+			</div>
+			<div id="gmp-map"></div>
+		</div>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABCDE"
+			async
+			defer
+		></script>
+	</body>
 </html>
