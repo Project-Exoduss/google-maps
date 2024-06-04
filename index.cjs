@@ -53,6 +53,7 @@ function updateJSONFile(selectedFields) {
 
 	// Update JSON content with the most recent record
 	jsonData.push({ ...selectedFields });
+	console.log(jsonData);
 
 	// Write updated JSON content back to file
 	fs.writeFileSync("groupData.json", JSON.stringify(jsonData, null, 2));
