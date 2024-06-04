@@ -38,21 +38,21 @@ base(TABLE_NAME)
 				placeId: mostRecentRecord.fields.PlaceID,
 			};
 			// console.log(selectedFields);
-			// updateJSONFile(selectedFields);
+			updateJSONFile(selectedFields);
 		} else {
 			console.log("No records found.");
 		}
 	});
 
-// function updateJSONFile(selectedFields) {
-// 	// Read JSON file
-// 	const rawData = fs.readFileSync("groupData.json");
-// 	let jsonData = JSON.parse(rawData);
+function updateJSONFile(selectedFields) {
+	// Read JSON file
+	const rawData = fs.readFileSync("groupData.json");
+	let jsonData = JSON.parse(rawData);
 
-// 	// Update JSON content with the most recent record
-// 	jsonData.push({ ...selectedFields });
-// 	console.log(jsonData);
+	// Update JSON content with the most recent record
+	jsonData.push({ ...selectedFields });
+	// console.log(jsonData);
 
-// 	// Write updated JSON content back to file
-// 	fs.writeFileSync("groupData.json", JSON.stringify(jsonData, null, 2));
-// }
+	// Write updated JSON content back to file
+	fs.writeFileSync("groupData.json", JSON.stringify(jsonData, null, 2));
+}
