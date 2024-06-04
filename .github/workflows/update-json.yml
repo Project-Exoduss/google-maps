@@ -25,12 +25,12 @@ jobs:
         run: curl -sSL -o groupData.json https://raw.githubusercontent.com/Project-Exoduss/google-maps/main/groupData.json
 
       - name: Run Update Script
-        run: node index.cjs
+        run: npm run dev
 
       - name: Commit and Push Changes
         run: |
-          git config --global user.email "actions@example.com"
-          git config --global user.name "GitHub Actions"
+          git config user.email "maxevans3108@gmail.com"
+          git config user.name "max-carver"
           git add groupData.json
           git commit -m "Update JSON data"
           git push
