@@ -25,6 +25,8 @@ jobs:
 
       - name: Run Update Script
         run: npm run dev
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
 
       - name: Commit and Push Changes
         run: |
