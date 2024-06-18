@@ -1035,48 +1035,49 @@
 				const data = await response.json();
 				return data;
 			};
-			const loaderContainer = document.getElementById("loader");
-			loaderContainer.style.display = "flex";
+			window.addEventListener("DOMContentLoaded", () => {
+				const loaderContainer = document.getElementById("loader");
+				loaderContainer.style.display = "flex";
+				fetchData()
+					.then((locations) => {
+						const CONFIGURATION = {
+							locations,
+							mapOptions: {
+								center: { lat: 0, lng: 0 },
+								gestureHandling: "cooperative",
+								fullscreenControl: true,
+								mapTypeControl: false,
+								streetViewControl: false,
+								zoom: 8,
+								zoomControl: true,
+								maxZoom: 80,
+								mapId: "b9f5280014bac665",
+							},
+							mapsApiKey: "AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk",
+							capabilities: {
+								input: true,
+								autocomplete: true,
+								directions: true,
+								distanceMatrix: true,
+								details: true,
+								actions: false,
+							},
+						};
 
-			fetchData()
-				.then((locations) => {
-					const CONFIGURATION = {
-						locations,
-						mapOptions: {
-							center: { lat: 0, lng: 0 },
-							gestureHandling: "cooperative",
-							fullscreenControl: true,
-							mapTypeControl: false,
-							streetViewControl: false,
-							zoom: 8,
-							zoomControl: true,
-							maxZoom: 80,
-							mapId: "b9f5280014bac665",
-						},
-						mapsApiKey: "AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk",
-						capabilities: {
-							input: true,
-							autocomplete: true,
-							directions: true,
-							distanceMatrix: true,
-							details: true,
-							actions: false,
-						},
-					};
+						console.log(CONFIGURATION.locations.length);
 
-					console.log(CONFIGURATION.locations.length);
+						function initMap() {
+							new LocatorPlus(CONFIGURATION);
+							loaderContainer.style.display = "none";
+						}
 
-					function initMap() {
-						new LocatorPlus(CONFIGURATION);
+						initMap();
+					})
+					.catch((error) => {
+						console.error("Error fetching data:", error);
 						loaderContainer.style.display = "none";
-					}
-
-					initMap();
-				})
-				.catch((error) => {
-					console.error("Error fetching data:", error);
-					loaderContainer.style.display = "none";
-				});
+					});
+			});
 		</script>
 
 		<script
@@ -1267,10 +1268,6 @@
 	</head>
 	<body>
 		<div id="map-container">
-			<div id="loader" class="loader-container">
-				<div class="loader"></div>
-				<p>Loading...</p>
-			</div>
 			<div id="locations-panel">
 				<div id="locations-panel-list">
 					<header>
@@ -1307,6 +1304,10 @@
 				<div id="locations-panel-details"></div>
 			</div>
 			<div id="gmp-map"></div>
+		</div>
+		<div id="loader" class="loader-container">
+			<div class="loader"></div>
+			<p>Loading...</p>
 		</div>
 		<script
 			src="https://maps.googleapis.com/maps/api/js?v=beta&key=AIzaSyBULz8OaS5-O6b8R8HjCtZkePq0z9UAMHk&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABCDE"
