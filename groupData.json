@@ -90,21 +90,6 @@
     "placeId": "ChIJra3pGCngZh4RWAI3otBlJF8"
   },
   {
-    "title": "ADCA, Ballito",
-    "url": "./group-logos/adca-logo.webp",
-    "address1": "Against Drugs & Child Abuse Main Street, Umhlali Village",
-    "address2": "Ballito, Durban, South Africa",
-    "startTime": "18h30",
-    "endTime": "20h30",
-    "day": "Monday",
-    "email": "rex@adca.co.za",
-    "coords": {
-      "lat": -29.477569210529442,
-      "lng": 31.217267688818815
-    },
-    "placeId": "ChIJITux27YV9x4Rgi-v7AgUDaw"
-  },
-  {
     "title": "Norwegian Settlers",
     "url": "./group-logos/norwegian-logo.webp",
     "address1": "Lot no 17, Marburg Settlement, Izotsha Road",
