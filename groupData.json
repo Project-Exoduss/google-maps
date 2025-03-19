@@ -249,21 +249,6 @@
     "placeId": "ChIJtcJivKME9x4RyRb5BF0L_rg"
   },
   {
-    "title": "ADCA, Supporters",
-    "url": "./group-logos/adca-logo.webp",
-    "address1": "ADCA",
-    "address2": "Dolphin Coast, South Africa",
-    "startTime": "10h30",
-    "endTime": "12h30",
-    "day": "Tuesday",
-    "email": "rex@adca.co.za",
-    "coords": {
-      "lat": -29.47734271598032,
-      "lng": 31.21729652243871
-    },
-    "placeId": "ChIJITux27YV9x4Rgi-v7AgUDaw"
-  },
-  {
     "title": "Christian Family Church - Tembisa ",
     "url": "./group-logos/tembisa-logo.webp",
     "address1": "Tembisa CFC, 5140 RTJ Namane Drive",
@@ -778,5 +763,20 @@
       "lng": 28.278332824249542
     },
     "placeId": "ChIJb5Lrz7VglR4Rp53-BvtaSJc"
-  }
+  },
+  {
+    "title": "Acts Christian Church",
+    "url": "",
+    "address1": "241 Pretorius Road, Vorna Valley",
+    "address2": "Midrand, ZA",
+    "startTime": "18:30",
+    "endTime": "20:00",
+    "day": "Monday",
+    "email": "counselling@actschurch.co.za",
+    "coords": {
+      "lat": -26.00519842363517,
+      "lng": 28.11494752498548
+    },
+    "placeId": ""
+  },
 ]
