@@ -15,21 +15,6 @@
     "placeId": "ChIJ2aXMdHal9h4RSDYldKm-sp8"
   },
   {
-    "title": "SBC Project Exodus",
-    "url": "./group-logos/sbc-logo.webp",
-    "address1": "33 Drake Road, Nahoon",
-    "address2": "East London, South Africa",
-    "startTime": "18h00",
-    "endTime": "19h00",
-    "day": "Monday",
-    "email": "mark.wood8106@gmail.com",
-    "coords": {
-      "lat": -32.98808477937387,
-      "lng": 27.927394466316418
-    },
-    "placeId": "ChIJSc7qqdUfZx4R62mCvhJ_5r0"
-  },
-  {
     "title": "Life Changers",
     "url": "./group-logos/lifechangers-logo.webp",
     "address1": "Life Changers Church, Corner Echium Rd & Raats Drive",
@@ -90,7 +75,7 @@
     "placeId": "ChIJra3pGCngZh4RWAI3otBlJF8"
   },
   {
-    "title": "Norwegian Settlers",
+    "title": "Norwegian Settlers Church",
     "url": "./group-logos/norwegian-logo.webp",
     "address1": "Lot no 17, Marburg Settlement, Izotsha Road",
     "address2": "Marburg, Port Shepstone, South Africa",
@@ -183,42 +168,6 @@
     "placeId": "ChIJOQkwIMHKzR0RDNQEpxaLyeA"
   },
   {
-    "title": "Recovery Station - Brookeborough",
-    "url": "./group-logos/recoverystation-logo.webp",
-    "address1": "Railway Station Brookeborough Road Brookeborough County Fermanagh BT94 4DN",
-    "address2": "Brookeborough, Northern Ireland",
-    "startTime": "20h00",
-    "endTime": "21h30",
-    "day": "Monday",
-    "email": [
-      "ryan@recoverystation.uk",
-      "rebecca@recoverystation.uk"
-    ],
-    "coords": {
-      "lat": 54.31433529855026,
-      "lng": -7.408131307607052
-    },
-    "placeId": "ChIJ15Fs3eo7XkgRyknogOTtur0"
-  },
-  {
-    "title": "Recovery Station - Lisbellaw",
-    "url": "./group-logos/recoverystation-logo.webp",
-    "address1": "The Forge, 9 Brook Street",
-    "address2": "Lisbellaw, Northern Ireland",
-    "startTime": "20h00",
-    "endTime": "21h00",
-    "day": "Monday",
-    "email": [
-      "ryan@recoverystation.uk",
-      "rebecca@recoverystation.uk"
-    ],
-    "coords": {
-      "lat": 54.31721024047425,
-      "lng": -7.535856709960853
-    },
-    "placeId": "ChIJ0772pZE4XkgRPw4lUnMI1Vk"
-  },
-  {
     "title": "Koinonia Recovery Centre - Gonubie",
     "url": "./group-logos/koinonia-logo.webp",
     "address1": "2 Recreation Road",
@@ -232,36 +181,6 @@
       "lng": 28.02606345343405
     },
     "placeId": "ChIJdWSswbEYZx4RnSHxXFmaiF8"
-  },
-  {
-    "title": "ABC Ministries, Phoenix",
-    "url": "./group-logos/abc-logo.webp",
-    "address1": "5 Fairlen Way",
-    "address2": "Phoenix, South Africa",
-    "startTime": "18h30",
-    "endTime": "20h00",
-    "day": "Tuesday",
-    "email": "solomongopaul@gmail.com",
-    "coords": {
-      "lat": -29.696305977383137,
-      "lng": 30.995308292990234
-    },
-    "placeId": "ChIJtcJivKME9x4RyRb5BF0L_rg"
-  },
-  {
-    "title": "ADCA, Supporters",
-    "url": "./group-logos/adca-logo.webp",
-    "address1": "ADCA",
-    "address2": "Dolphin Coast, South Africa",
-    "startTime": "10h30",
-    "endTime": "12h30",
-    "day": "Tuesday",
-    "email": "rex@adca.co.za",
-    "coords": {
-      "lat": -29.47734271598032,
-      "lng": 31.21729652243871
-    },
-    "placeId": "ChIJITux27YV9x4Rgi-v7AgUDaw"
   },
   {
     "title": "Christian Family Church - Tembisa ",
@@ -322,36 +241,6 @@
       "lng": 31.181216195993496
     },
     "placeId": "ChIJlR2iS3kU9x4RDeZOWT1tSEQ"
-  },
-  {
-    "title": "Urban Recovery, Midrand",
-    "url": "./group-logos/urban-logo.webp",
-    "address1": "Urban Life Church, 64 Main Avenue",
-    "address2": "Crowthorn, Midrand, South Africa",
-    "startTime": "19h00",
-    "endTime": "21h00",
-    "day": "Tuesday",
-    "email": "steven@urbanrecovery.co.za",
-    "coords": {
-      "lat": -25.97104847884356,
-      "lng": 28.079178010766
-    },
-    "placeId": "ChIJwx9Hqk1wlR4RISpvEuGubWQ"
-  },
-  {
-    "title": "The Rock Church",
-    "url": "./group-logos/rock-logo.webp",
-    "address1": "1 Tamarind Close",
-    "address2": "Sunningdale, Durban, South Africa",
-    "startTime": "19h00",
-    "endTime": "20h30",
-    "day": "Tuesday",
-    "email": "therockrecovery1@gmail.com",
-    "coords": {
-      "lat": -29.740857479102882,
-      "lng": 31.050975015833664
-    },
-    "placeId": "ChIJf175edwF9x4RzYerN0YQm0s"
   },
   {
     "title": "New Creation Recovery",
@@ -457,21 +346,6 @@
       "lng": 18.506769428357728
     },
     "placeId": "ChIJdfMhFxFczB0R6jMgOhmE41Q"
-  },
-  {
-    "title": "Hillsong North Recovery",
-    "url": "./group-logos/hillsong-logo.webp",
-    "address1": "Hillsong Church, Northern Suburbs, Bellville",
-    "address2": "Cape Town, South Africa",
-    "startTime": "18h30",
-    "endTime": "20h00",
-    "day": "Wednesday",
-    "email": "hugo.marchand@hillsong.co.za",
-    "coords": {
-      "lat": -33.872370622333,
-      "lng": 18.63338469581211
-    },
-    "placeId": "ChIJpaFj6MVRzB0RCatuMPOYCw4"
   },
   {
     "title": "Urban Recovery, Centurion",
@@ -594,21 +468,6 @@
     "placeId": "ChIJjcmMnbRslR4RaYfqW7qZJoQ"
   },
   {
-    "title": "ABC Recovery, Caneside",
-    "url": "./group-logos/abc-logo.webp",
-    "address1": "Brook Christian Fellowship, 22 Spireside",
-    "address2": "Candeside, Phoenix, Durban, South Africa",
-    "startTime": "18h30",
-    "endTime": "20h00",
-    "day": "Thursday",
-    "email": "solomongopaul@gmail.com",
-    "coords": {
-      "lat": -29.688786532423933,
-      "lng": 31.007464699033054
-    },
-    "placeId": "ChIJF4SMs-wF9x4Rb6OZrpuV53Y"
-  },
-  {
     "title": "Kairos Recovery, Bluff",
     "url": "./group-logos/kairos-logo.webp",
     "address1": "Trinity Family Church",
@@ -622,21 +481,6 @@
       "lng": 30.985034324306994
     },
     "placeId": "EjNTb2xvbW9uIE1haGxhbmd1IERyLCBHcm9zdmVub3IsIEJsdWZmLCBTb3V0aCBBZnJpY2EiLiosChQKEgkT0mPZzav3HhE4zVXWsChoQBIUChIJV85J3Uep9x4RbvseFrszR9Y"
-  },
-  {
-    "title": "Cornerstone Community Church",
-    "url": "./group-logos/cornerstone-logo.webp",
-    "address1": "324 Longbury Drive",
-    "address2": "Phoneix, Durban, South Africa",
-    "startTime": "19h00",
-    "endTime": "21h00",
-    "day": "Thursday",
-    "email": "raheel@cast.org.za",
-    "coords": {
-      "lat": -29.709265974215214,
-      "lng": 31.007217997181606
-    },
-    "placeId": "ChIJAwsQr40E9x4R5R_CCrNGdhA"
   },
   {
     "title": "Redeemed Recovery",
@@ -702,22 +546,7 @@
     "placeId": "ChIJF6r7phzasokRPliDk1hB_O0"
   },
   {
-    "title": "Olive Tree Church",
-    "url": "./group-logos/otc-logo.webp",
-    "address1": "113 Florida Road",
-    "address2": "Windermere, Durban, South Africa",
-    "startTime": "18h30",
-    "endTime": "20h00",
-    "day": "Friday",
-    "email": "gareth@projectexodus.net",
-    "coords": {
-      "lat": -29.83470447882349,
-      "lng": 31.017628554857687
-    },
-    "placeId": "ChIJ04ZXc2QH9x4ReJtMETIA18Y"
-  },
-  {
-    "title": "Miracle Life",
+    "title": "Miracle Life Family Church",
     "url": "./group-logos/miracle-life-logo.webp",
     "address1": "Plot 256 Foxdale, Zambezi Road Chamba Valley",
     "address2": "Lusaka, Zambia",
@@ -730,21 +559,6 @@
       "lng": 28.326657982798444
     },
     "placeId": "ChIJLcZ6EwA59h4RIn1WFo3Qmig"
-  },
-  {
-    "title": "DCC, Phoenix",
-    "url": "./group-logos/dcc-logo.png",
-    "address1": "126 Abervale Road",
-    "address2": "Rydalvale, Phoenix, Durban, South Africa",
-    "startTime": "19h00",
-    "endTime": "20h30",
-    "day": "Friday",
-    "email": "info@dcc-admin.co.za",
-    "coords": {
-      "lat": -29.706758150337848,
-      "lng": 31.00124276834551
-    },
-    "placeId": "ChIJ_Y2YWpAE9x4RPD1tj1QE-mg"
   },
   {
     "title": "Redeemed Recovery",
