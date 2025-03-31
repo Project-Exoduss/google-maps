@@ -607,23 +607,6 @@
       "lat": -26.005111640319857,
       "lng": 28.114893880808044
     },
-    "placeId": ""
-=======
-  },
-  {
-    "title": "Acts Christian Church",
-    "url": "",
-    "address1": "241 Pretorius Road, Vorna Valley",
-    "address2": "Midrand, ZA",
-    "startTime": "18:30",
-    "endTime": "20:00",
-    "day": "Monday",
-    "email": "counselling@actschurch.co.za",
-    "coords": {
-      "lat": -26.00519842363517,
-      "lng": 28.11494752498548
-    },
-    "placeId": ""
->>>>>>> b5f1cf2ac50c61ed66467912fa2af88f51749bef
+    "placeId": "b5f1cf2ac50c61ed66467912fa2af88f51749bef"
   }
 ]
